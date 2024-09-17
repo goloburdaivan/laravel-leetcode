@@ -22,7 +22,6 @@ class CreateLabRequest extends FormRequest
         return [
             'starter_code' => ['string', 'required'],
             'description' => ['string', 'required'],
-            'creator_id' => ['int', 'required'],
         ];
     }
 }

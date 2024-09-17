@@ -20,7 +20,9 @@ class LabController extends Controller
     public function create(CreateLabRequest $request): JsonResponse
     {
         $data = $request->validated();
-        $lab = $this->repository->create($data);
+        $lab = $this->repository->create($data + [
+            'creator_id' => $request->user()->id,
+        ]);
 
         return response()->json([
             'lab' => $lab,
