@@ -27,4 +27,9 @@ class TeacherRepository
 
         return $teacher;
     }
+
+    public function getWithCourses(Teacher $teacher): Teacher
+    {
+        return $teacher->load('courses');
+    }
 }

@@ -2,19 +2,27 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Constants\Routes;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterUserRequest;
 use App\Http\Requests\UserLoginRequest;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Inertia\Inertia;
 
 class AuthController extends Controller
 {
     public function __construct(
         private readonly UserService $userService,
     ) {
+    }
+
+    public function index(): \Inertia\Response
+    {
+        return Inertia::render('User/Login');
     }
 
     /**
@@ -30,19 +38,15 @@ class AuthController extends Controller
         ]);
     }
 
-    public function login(UserLoginRequest $request): JsonResponse
+    public function login(UserLoginRequest $request): RedirectResponse
     {
         if (!$this->userService->login($request)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid creds',
-            ], 403);
+            return back()->withErrors([
+                'email' => 'Invalid credentials.',
+            ])->withInput();
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Successfully logged in',
-        ]);
+        return response()->redirectTo(Routes::CUSTOMER_HOME);
     }
 
     public function logout(Request $request): Response

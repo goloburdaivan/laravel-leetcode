@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
-class CreateTestCaseRequest extends FormRequest
+use Illuminate\Foundation\Http\FormRequest;
+
+class CreateCourseRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,8 +22,8 @@ class CreateTestCaseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'input' => ['string', 'nullable'],
-            'expected_output' => ['string', 'required'],
+            'name' => ['string', 'required'],
+            'description' => ['string', 'nullable'],
         ];
     }
 }

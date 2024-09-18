@@ -2,20 +2,28 @@
 
 namespace App\Http\Controllers\Teacher;
 
+use App\Constants\Routes;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterUserRequest;
 use App\Http\Requests\UserLoginRequest;
 use App\Services\TeacherService;
-use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Inertia\Inertia;
+
 
 class AuthController extends Controller
 {
     public function __construct(
         private readonly TeacherService $teacherService,
     ) {
+    }
+
+    public function index(): \Inertia\Response
+    {
+        return Inertia::render('Teacher/Login');
     }
 
     /**
@@ -31,19 +39,15 @@ class AuthController extends Controller
         ]);
     }
 
-    public function login(UserLoginRequest $request): JsonResponse
+    public function login(UserLoginRequest $request): RedirectResponse
     {
         if (!$this->teacherService->login($request)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid creds',
-            ], 403);
+            return back()->withErrors([
+                'email' => 'Invalid credentials.',
+            ])->withInput();
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Successfully logged in',
-        ]);
+        return response()->redirectTo(Routes::TEACHER_HOME);
     }
 
     public function logout(Request $request): Response
