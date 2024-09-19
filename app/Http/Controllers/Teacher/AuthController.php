@@ -12,6 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 
 
 class AuthController extends Controller
@@ -21,22 +22,24 @@ class AuthController extends Controller
     ) {
     }
 
-    public function index(): \Inertia\Response
+    public function index(): InertiaResponse
     {
         return Inertia::render('Teacher/Login');
+    }
+
+    public function indexRegister(): InertiaResponse
+    {
+        return Inertia::render('Teacher/Register');
     }
 
     /**
      * @throws \Exception
      */
-    public function register(RegisterUserRequest $request): JsonResponse
+    public function register(RegisterUserRequest $request): RedirectResponse
     {
         $this->teacherService->register($request);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'User registered',
-        ]);
+        return response()->redirectTo(route('teacher.auth.index'));
     }
 
     public function login(UserLoginRequest $request): RedirectResponse
@@ -47,7 +50,7 @@ class AuthController extends Controller
             ])->withInput();
         }
 
-        return response()->redirectTo(Routes::TEACHER_HOME);
+        return response()->redirectTo(route('teacher.index'));
     }
 
     public function logout(Request $request): Response

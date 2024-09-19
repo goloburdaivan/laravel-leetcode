@@ -11,10 +11,12 @@ class TestCaseRepository
     /**
      * @throws \Exception
      */
-    public function create(array $data): TestCase
+    public function create(Lab $lab, array $data): TestCase
     {
         $case = new TestCase();
-        return $this->update($case, $data);
+        return $this->update($case, $data + [
+            'lab_id' => $lab->id,
+        ]);
     }
 
     public function update(TestCase $case, array $data): TestCase

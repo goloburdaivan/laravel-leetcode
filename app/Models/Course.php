@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Course extends Model
 {
@@ -14,4 +15,9 @@ class Course extends Model
         'description',
         'teacher_id',
     ];
+
+    public function labs(): HasMany
+    {
+        return $this->hasMany(Lab::class);
+    }
 }

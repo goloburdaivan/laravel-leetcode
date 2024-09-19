@@ -22,6 +22,7 @@ class CreateLabRequest extends FormRequest
         return [
             'starter_code' => ['string', 'required'],
             'description' => ['string', 'required'],
+            'due_date' => ['datetime', 'nullable'],
         ];
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Models\Course;
 use App\Models\Lab;
+use Illuminate\Database\Eloquent\Collection;
 
 class LabRepository
 {
@@ -26,5 +28,10 @@ class LabRepository
         }
 
         return $lab;
+    }
+
+    public function getAllByCourse(Course $course): Collection
+    {
+        return Lab::query()->where('course_id', $course->id)->get();
     }
 }

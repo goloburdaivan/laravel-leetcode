@@ -1,18 +1,29 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, Button, Box, Drawer, List, ListItem, ListItemText, IconButton } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Box, Drawer, List, ListItem, ListItemText, IconButton, Container } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import AddIcon from '@mui/icons-material/Add';
 import Courses from './Components/Courses.jsx';
+import CreateCourseModal from './Components/CreateCourseModal.jsx';
 
 export default function TeacherDashboard({ teacher }) {
     const [drawerOpen, setDrawerOpen] = useState(false);
-    console.log(teacher);
+    const [modalOpen, setModalOpen] = useState(false);
+
     const toggleDrawer = () => {
         setDrawerOpen(!drawerOpen);
     };
 
+    const handleOpenModal = () => {
+        setModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setModalOpen(false);
+    };
+
     return (
         <Box sx={{ display: 'flex' }}>
-            <AppBar position="fixed">
+            <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
                 <Toolbar>
                     <IconButton
                         edge="start"
@@ -49,11 +60,31 @@ export default function TeacherDashboard({ teacher }) {
                 </List>
             </Drawer>
 
-            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <Box
+                component="main"
+                sx={{ flexGrow: 1, p: 3, mt: 8 }}
+            >
                 <Toolbar />
-                {/* Компонент с курсами */}
-                <Courses />
+                <Container maxWidth="lg">
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+                        <Typography variant="h4">My Courses</Typography>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            startIcon={<AddIcon />}
+                            onClick={handleOpenModal}
+                        >
+                            Create Course
+                        </Button>
+                    </Box>
+                    <Courses courses={teacher.courses} />
+                </Container>
             </Box>
+
+            <CreateCourseModal
+                open={modalOpen}
+                onClose={handleCloseModal}
+            />
         </Box>
     );
 }
