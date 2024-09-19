@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-    AppBar,
     Toolbar,
     Typography,
     Button,
@@ -14,30 +13,14 @@ import {
     TableRow,
     Paper,
     Pagination,
-    IconButton,
     Container,
-    Drawer, List, ListItem, ListItemText
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AddIcon from '@mui/icons-material/Add';
+import Navigation from "@/Pages/Components/Navigation.jsx";
 
-const TeacherDashboard = () => {
-    const [drawerOpen, setDrawerOpen] = useState(false);
+const TeacherDashboard = ({ course, labs }) => {
     const [search, setSearch] = useState('');
-    const [labs, setLabs] = useState([
-        { id: 1, title: 'Physics Lab 1', due_date: '2024-09-30' },
-        { id: 2, title: 'Chemistry Lab 2', due_date: '2024-10-05' },
-        { id: 3, title: 'Biology Lab 3', due_date: '2024-09-25' },
-        { id: 4, title: 'Computer Science Lab 4', due_date: '2024-09-28' },
-        { id: 5, title: 'Math Lab 5', due_date: '2024-09-20' },
-        { id: 6, title: 'Electrical Lab 6', due_date: '2024-10-01' },
-        { id: 7, title: 'Mechanical Lab 7', due_date: '2024-09-18' },
-        { id: 8, title: 'Thermodynamics Lab 8', due_date: '2024-09-22' },
-    ]);
-
-    const toggleDrawer = () => {
-        setDrawerOpen(!drawerOpen);
-    };
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -49,43 +32,7 @@ const TeacherDashboard = () => {
 
     return (
         <Box sx={{ display: 'flex' }}>
-            {/* Навигационная панель */}
-            <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-                <Toolbar>
-                    <IconButton
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        sx={{ mr: 2 }}
-                        onClick={toggleDrawer}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                        Teacher's Dashboard
-                    </Typography>
-                    <Button color="inherit">Logout</Button>
-                </Toolbar>
-            </AppBar>
-
-            {/* Drawer */}
-            <Drawer
-                anchor="left"
-                open={drawerOpen}
-                onClose={toggleDrawer}
-                sx={{ width: 240, flexShrink: 0 }}
-            >
-                <List>
-                    <ListItem button>
-                        <ListItemText primary="My Labs" />
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemText primary="Add Lab" />
-                    </ListItem>
-                    {/* Добавьте другие ссылки, если необходимо */}
-                </List>
-            </Drawer>
-
+            <Navigation />
             <Box
                 component="main"
                 sx={{ flexGrow: 1, p: 3, mt: 8 }}
@@ -98,7 +45,7 @@ const TeacherDashboard = () => {
                             variant="contained"
                             color="primary"
                             startIcon={<AddIcon />}
-                            onClick={handleNewLab}
+                            href={`/teacher/courses/${course.id}/labs/create`}
                         >
                             Create New Lab
                         </Button>
@@ -122,7 +69,6 @@ const TeacherDashboard = () => {
                         </Button>
                     </Box>
 
-                    {/* Таблица лабораторных */}
                     <TableContainer component={Paper}>
                         <Table>
                             <TableHead>
@@ -144,8 +90,9 @@ const TeacherDashboard = () => {
                                                 variant="outlined"
                                                 color="primary"
                                                 size="small"
+                                                href={`/teacher/courses/${course.id}/labs/${lab.id}`}
                                             >
-                                                Edit
+                                                Show
                                             </Button>
                                         </TableCell>
                                     </TableRow>

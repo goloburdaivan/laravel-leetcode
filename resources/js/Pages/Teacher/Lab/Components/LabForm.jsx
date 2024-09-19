@@ -4,21 +4,33 @@ import {
     TextField,
     Button,
     Typography,
-    Paper,
     Grid,
     FormControl,
     InputAdornment,
 } from '@mui/material';
-import { Editor } from '@monaco-editor/react'; // Импортируем Monaco Editor
+import { Editor } from '@monaco-editor/react';
 import SaveIcon from '@mui/icons-material/Save';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
-const LabForm = ({ onSubmit, initialValues, title }) => {
-    const { description, starter_code, due_date } = initialValues;
+const LabForm = ({ onFieldChange, initialValues, handleSubmit }) => {
+    const { description, starter_code, due_date, title } = initialValues;
 
     return (
-        <Box component="form" onSubmit={onSubmit}>
+        <Box component="form" onSubmit={handleSubmit}>
             <Grid container spacing={3}>
+                <Grid item xs={12}>
+                    <Typography variant="h6" gutterBottom>
+                        Lab Title
+                    </Typography>
+                    <TextField
+                        label="Title"
+                        variant="outlined"
+                        fullWidth
+                        value={title}
+                        onChange={(e) => onFieldChange('title', e.target.value)}
+                    />
+                </Grid>
+
                 <Grid item xs={12} md={6}>
                     <Typography variant="h6" gutterBottom>
                         Description
@@ -30,7 +42,7 @@ const LabForm = ({ onSubmit, initialValues, title }) => {
                         multiline
                         rows={8}
                         value={description}
-                        onChange={(e) => onSubmit('description', e.target.value)}
+                        onChange={(e) => onFieldChange('description', e.target.value)}
                     />
                 </Grid>
 
@@ -40,9 +52,9 @@ const LabForm = ({ onSubmit, initialValues, title }) => {
                     </Typography>
                     <Editor
                         height="300px"
-                        defaultLanguage="javascript"
+                        defaultLanguage="python"
                         value={starter_code}
-                        onChange={(value) => onSubmit('starter_code', value || '')}
+                        onChange={(value) => onFieldChange('starter_code', value || '')}
                         theme="vs-dark"
                     />
                 </Grid>
@@ -60,7 +72,7 @@ const LabForm = ({ onSubmit, initialValues, title }) => {
                                 ),
                             }}
                             value={due_date}
-                            onChange={(e) => onSubmit('due_date', e.target.value)}
+                            onChange={(e) => onFieldChange('due_date', e.target.value)}
                             InputLabelProps={{
                                 shrink: true,
                             }}

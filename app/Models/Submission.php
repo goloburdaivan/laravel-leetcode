@@ -29,4 +29,9 @@ class Submission extends Model
     {
         return $this->belongsTo(Lab::class);
     }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

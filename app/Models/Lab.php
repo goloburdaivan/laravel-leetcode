@@ -13,6 +13,7 @@ class Lab extends Model
     use HasFactory;
 
     protected $fillable = [
+        'title',
         'starter_code',
         'description',
         'due_date',

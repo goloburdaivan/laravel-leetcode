@@ -34,4 +34,9 @@ class LabRepository
     {
         return Lab::query()->where('course_id', $course->id)->get();
     }
+
+    public function loadTestCases(Lab $lab): Lab
+    {
+        return $lab->load('testCases');
+    }
 }

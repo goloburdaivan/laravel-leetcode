@@ -1,11 +1,10 @@
 <?php
 
+use App\Http\Controllers\LabSubmissionsController;
 use App\Http\Controllers\Teacher\AuthController;
 use App\Http\Controllers\Teacher\CourseController;
 use App\Http\Controllers\Teacher\HomeController;
 use App\Http\Controllers\Teacher\CourseLabsController;
-use App\Http\Controllers\Teacher\TestCaseController;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(AuthController::class)->group(function () {
@@ -38,15 +37,25 @@ Route::controller(CourseLabsController::class)->group(function() {
         ->middleware('auth:teacher')
         ->can('view', 'course');
 
-    Route::post('/courses/{course}/labs/store', 'store')
-        ->name('teacher.course-labs.store')
-        ->middleware('auth:teacher');
-
     Route::get('/courses/{course}/labs/{lab}', 'show')
         ->name('teacher.course-labs.show')
+        ->middleware('auth:teacher')
+        ->can('view', 'course');
+
+    Route::put('/courses/{course}/labs/{lab}', 'update')
+        ->name('teacher.course-labs.update')
+        ->middleware('auth:teacher');
+
+    Route::post('/courses/{course}/labs/store', 'store')
+        ->name('teacher.course-labs.store')
         ->middleware('auth:teacher');
 
     Route::post('/courses/{course}/labs/{lab}/test-cases', 'addTestCase')
         ->name('teacher.course-labs.add-test-case')
         ->middleware('auth:teacher');
+});
+
+Route::controller(LabSubmissionsController::class)->group(function() {
+    Route::get('/labs/{lab}/submissions', 'index');
+    Route::get('/labs/{lab}/submissions/{submission}', 'show');
 });

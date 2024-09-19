@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-class CreateLabRequest extends FormRequest
+class EditLabRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,9 +20,10 @@ class CreateLabRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'title' => ['string', 'required'],
             'starter_code' => ['string', 'required'],
             'description' => ['string', 'required'],
-            'due_date' => ['datetime', 'nullable'],
+            'due_date' => ['date', 'nullable'],
         ];
     }
 }

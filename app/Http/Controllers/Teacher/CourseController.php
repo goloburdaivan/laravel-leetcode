@@ -32,6 +32,7 @@ class CourseController extends Controller
     {
         $labs = $this->labRepository->getAllByCourse($course);
         return Inertia::render('Teacher/Course/Index', [
+            'course' => $course,
             'labs' => $labs,
         ]);
     }
