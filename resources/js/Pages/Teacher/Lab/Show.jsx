@@ -1,17 +1,23 @@
-import React from 'react';
-import { Container, Typography, Paper, Box } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Container, Typography, Paper, Box, Tabs, Tab, CircularProgress } from '@mui/material';
 import { useForm } from '@inertiajs/react';
+import axios from 'axios'; // Import Axios for API requests
 import LabForm from './Components/LabForm.jsx';
 import Navigation from "@/Pages/Components/Navigation.jsx";
 import TestCases from "@/Pages/Teacher/Lab/Components/TestCases.jsx";
+import Submissions from "@/Pages/Teacher/Lab/Components/Submissions.jsx";
 
 const EditLab = ({ lab }) => {
-    const { data, setData, put, post } = useForm({
+    const { data, setData, put } = useForm({
         title: lab.title,
         description: lab.description || '',
         starter_code: lab.starter_code,
         due_date: lab.due_date ? new Date(lab.due_date).toISOString().split('T')[0] : '',
     });
+
+    const [tabIndex, setTabIndex] = useState(0);
+    const [submissions, setSubmissions] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const handleFieldChange = (key, value) => {
         setData(key, value);
@@ -20,6 +26,27 @@ const EditLab = ({ lab }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         put(`/teacher/courses/${lab.course_id}/labs/${lab.id}`);
+    };
+
+    const handleTabChange = (event, newValue) => {
+        setTabIndex(newValue);
+
+        if (newValue === 1 && submissions.length === 0) {
+            fetchSubmissions();
+        }
+    };
+
+    const fetchSubmissions = async () => {
+        setLoading(true); // Start loading state
+        try {
+            const response = await axios.get(`/teacher/labs/${lab.id}/submissions`);
+            setSubmissions(response.data.submissions);
+            console.log(response.data);
+        } catch (error) {
+            console.error("Error fetching submissions:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -44,10 +71,38 @@ const EditLab = ({ lab }) => {
                         />
 
                         <Box mt={4}>
-                            <Typography variant="h5" gutterBottom>
-                                Test Cases
-                            </Typography>
-                            <TestCases lab={lab} />
+                            <Tabs
+                                value={tabIndex}
+                                onChange={handleTabChange}
+                                indicatorColor="primary"
+                                textColor="primary"
+                                centered
+                            >
+                                <Tab label="Test Cases" />
+                                <Tab label="Submissions" />
+                            </Tabs>
+
+                            {tabIndex === 0 && (
+                                <Box mt={2}>
+                                    <Typography variant="h5" gutterBottom>
+                                        Test Cases
+                                    </Typography>
+                                    <TestCases lab={lab} />
+                                </Box>
+                            )}
+
+                            {tabIndex === 1 && (
+                                <Box mt={2}>
+                                    <Typography variant="h5" gutterBottom>
+                                        Submissions
+                                    </Typography>
+                                    {loading ? (
+                                        <CircularProgress />
+                                    ) : (
+                                        <Submissions submissions={submissions} />
+                                    )}
+                                </Box>
+                            )}
                         </Box>
                     </Paper>
                 </Container>
