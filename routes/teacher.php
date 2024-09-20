@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\LabSubmissionsController;
 use App\Http\Controllers\Teacher\AuthController;
 use App\Http\Controllers\Teacher\CourseController;
-use App\Http\Controllers\Teacher\HomeController;
 use App\Http\Controllers\Teacher\CourseLabsController;
+use App\Http\Controllers\Teacher\HomeController;
+use App\Http\Controllers\Teacher\LabSubmissionsController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(AuthController::class)->group(function () {

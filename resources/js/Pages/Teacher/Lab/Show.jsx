@@ -7,7 +7,7 @@ import Navigation from "@/Pages/Components/Navigation.jsx";
 import TestCases from "@/Pages/Teacher/Lab/Components/TestCases.jsx";
 import Submissions from "@/Pages/Teacher/Lab/Components/Submissions.jsx";
 
-const EditLab = ({ lab }) => {
+const EditLab = ({ lab, lists }) => {
     const { data, setData, put } = useForm({
         title: lab.title,
         description: lab.description || '',
@@ -37,11 +37,10 @@ const EditLab = ({ lab }) => {
     };
 
     const fetchSubmissions = async () => {
-        setLoading(true); // Start loading state
+        setLoading(true);
         try {
             const response = await axios.get(`/teacher/labs/${lab.id}/submissions`);
             setSubmissions(response.data.submissions);
-            console.log(response.data);
         } catch (error) {
             console.error("Error fetching submissions:", error);
         } finally {
@@ -99,7 +98,11 @@ const EditLab = ({ lab }) => {
                                     {loading ? (
                                         <CircularProgress />
                                     ) : (
-                                        <Submissions submissions={submissions} />
+                                        <Submissions
+                                            lab={lab}
+                                            statuses={lists.execution_status}
+                                            fetchedSubmissions={submissions}
+                                        />
                                     )}
                                 </Box>
                             )}

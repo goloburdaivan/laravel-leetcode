@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Teacher;
 
+use App\Enums\ExecutionStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EditLabRequest;
 use App\Http\Requests\CreateTestCaseRequest;
@@ -41,6 +42,9 @@ class CourseLabsController extends Controller
         $lab = $this->labService->getLabWithTestCases($lab);
         return Inertia::render('Teacher/Lab/Show', [
             'lab' => $lab,
+            'lists' => [
+                'execution_status' => ExecutionStatus::getLists(),
+            ],
         ]);
     }
 

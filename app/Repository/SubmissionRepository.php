@@ -2,9 +2,8 @@
 
 namespace App\Repository;
 
-use App\Models\Lab;
 use App\Models\Submission;
-use Illuminate\Database\Eloquent\Collection;
+use App\Repository\QueryBuilders\SubmissionQueryBuilder;
 
 class SubmissionRepository
 {
@@ -30,13 +29,8 @@ class SubmissionRepository
         return $submission;
     }
 
-    public function getSubmissionsByLab(Lab $lab): Collection
+    public function query(): SubmissionQueryBuilder
     {
-        return Submission::query()->where('lab_id', $lab->id)->with('user')->get();
-    }
-
-    public function getWithUser(Submission $submission): Submission
-    {
-        return $submission->load('user');
+        return new SubmissionQueryBuilder();
     }
 }
