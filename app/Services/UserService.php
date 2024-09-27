@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Http\Requests\RegisterUserRequest;
 use App\Http\Requests\UserLoginRequest;
+use App\Models\User;
+use App\Repository\LabRepository;
 use App\Repository\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

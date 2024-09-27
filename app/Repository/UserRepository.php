@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Models\User;
+use App\Repository\QueryBuilders\UserQueryBuilder;
 
 class UserRepository
 {
@@ -26,5 +27,10 @@ class UserRepository
         }
 
         return $user;
+    }
+
+    public function query(): UserQueryBuilder
+    {
+        return new UserQueryBuilder();
     }
 }

@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Models\Submission;
+use App\Models\User;
 use App\Repository\QueryBuilders\SubmissionQueryBuilder;
+use Illuminate\Database\Eloquent\Collection;
 
 class SubmissionRepository
 {
@@ -27,6 +29,16 @@ class SubmissionRepository
         }
 
         return $submission;
+    }
+
+    public function getLastUserSubmissions(User $user): Collection
+    {
+        return Submission::query()
+            ->whereRelation('user', 'user_id', $user->id)
+            ->with('lab')
+            ->withCount('testCases')
+            ->limit(5)
+            ->get();
     }
 
     public function query(): SubmissionQueryBuilder

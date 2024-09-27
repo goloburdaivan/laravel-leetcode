@@ -1,18 +1,28 @@
 <?php
 
-use App\Http\Controllers\Teacher\AuthController;
-use App\Http\Controllers\Teacher\CourseController;
-use App\Http\Controllers\Teacher\CourseLabsController;
+use App\Http\Controllers\Teacher\Auth\AuthController;
+use App\Http\Controllers\Teacher\Course\CourseController;
+use App\Http\Controllers\Teacher\Course\CourseLabsController;
 use App\Http\Controllers\Teacher\HomeController;
-use App\Http\Controllers\Teacher\LabSubmissionsController;
+use App\Http\Controllers\Teacher\Lab\LabSubmissionsController;
+use App\Http\Controllers\Teacher\Lab\LabTipController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(AuthController::class)->group(function () {
-    Route::get('/login', 'index')->name('teacher.auth.index');
-    Route::post('/login', 'login')->name('teacher.auth.login');
-    Route::get('/register', 'indexRegister')->name('teacher.auth.register-index');
-    Route::post('/register', 'register')->name('teacher.auth.register');
-    Route::post('/logout', 'logout')->name('teacher.auth.logout');
+    Route::get('/login', 'index')
+        ->name('teacher.auth.index');
+
+    Route::post('/login', 'login')
+        ->name('teacher.auth.login');
+
+    Route::get('/register', 'indexRegister')
+        ->name('teacher.auth.register-index');
+
+    Route::post('/register', 'register')
+        ->name('teacher.auth.register');
+
+    Route::post('/logout', 'logout')
+        ->name('teacher.auth.logout');
 });
 
 Route::controller(HomeController::class)->group(function() {
@@ -25,10 +35,15 @@ Route::controller(CourseController::class)->group(function() {
     Route::post('/courses', 'create')
         ->name('teacher.courses.create')
         ->middleware('auth:teacher');
+
     Route::get('/courses/{course}', 'show')
         ->name('teacher.courses.show')
         ->middleware('auth:teacher')
         ->can('view', 'course');
+
+    Route::post('/courses/{course}/invite', 'invite')
+        ->name('teacher.courses.invite')
+        ->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class);
 });
 
 Route::controller(CourseLabsController::class)->group(function() {
@@ -57,5 +72,14 @@ Route::controller(CourseLabsController::class)->group(function() {
 
 Route::controller(LabSubmissionsController::class)->group(function() {
     Route::get('/labs/{lab}/submissions', 'index');
+
     Route::get('/labs/{lab}/submissions/{submission}', 'show');
+});
+
+Route::controller(LabTipController::class)->group(function() {
+    Route::post('/labs/{lab}/tips', 'store')
+        ->name('teacher.lab-tips.store');
+
+    Route::get('/labs/{lab}/tips', 'index')
+        ->name('teacher.lab-tips.index');
 });

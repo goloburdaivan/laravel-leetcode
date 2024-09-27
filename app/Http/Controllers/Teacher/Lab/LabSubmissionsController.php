@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Teacher;
+namespace App\Http\Controllers\Teacher\Lab;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Filters\SubmissionFilterRequest;
@@ -23,7 +23,7 @@ class LabSubmissionsController extends Controller
             ->forLab($lab->id)
             ->withUser()
             ->applyFilters($request->query())
-            ->get();
+            ->paginate();
 
         return response()->json([
             'submissions' => $submissions,

@@ -1,18 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Teacher;
+namespace App\Http\Controllers\Teacher\Course;
 
 use App\Enums\ExecutionStatus;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\EditLabRequest;
 use App\Http\Requests\CreateTestCaseRequest;
+use App\Http\Requests\EditLabRequest;
 use App\Models\Course;
 use App\Models\Lab;
-use App\Repository\LabRepository;
-use App\Repository\TestCaseRepository;
 use App\Services\LabService;
-use App\Services\TestCaseService;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -61,6 +57,13 @@ class CourseLabsController extends Controller
         ]);
     }
 
+    public function create(Course $course): Response
+    {
+        return Inertia::render('Teacher/Lab/Create', [
+            'course' => $course,
+        ]);
+    }
+
     /**
      * @throws \Exception
      */
@@ -74,10 +77,4 @@ class CourseLabsController extends Controller
         ]);
     }
 
-    public function create(Course $course): Response
-    {
-        return Inertia::render('Teacher/Lab/Create', [
-            'course' => $course,
-        ]);
-    }
 }

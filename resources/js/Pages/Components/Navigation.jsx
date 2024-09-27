@@ -23,7 +23,7 @@ export default function Navigation() {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                        Teacher's Dashboard
+                        Dashboard
                     </Typography>
                     <Button color="inherit">Logout</Button>
                 </Toolbar>

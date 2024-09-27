@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\User\Auth;
 
 use App\Constants\Routes;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterUserRequest;
 use App\Http\Requests\UserLoginRequest;
 use App\Services\UserService;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -25,17 +24,19 @@ class AuthController extends Controller
         return Inertia::render('User/Login');
     }
 
+    public function registerIndex(): \Inertia\Response
+    {
+        return Inertia::render('User/Register');
+    }
+
     /**
      * @throws \Exception
      */
-    public function register(RegisterUserRequest $request): JsonResponse
+    public function register(RegisterUserRequest $request): RedirectResponse
     {
         $this->userService->register($request);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'User registered',
-        ]);
+        return redirect()->route('user.auth.index');
     }
 
     public function login(UserLoginRequest $request): RedirectResponse

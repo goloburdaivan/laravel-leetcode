@@ -39,4 +39,14 @@ class Lab extends Model
     {
         return $this->belongsTo(Course::class);
     }
+
+    public function tips(): HasMany
+    {
+        return $this->hasMany(LabTip::class);
+    }
+
+    public function submissions(): HasMany
+    {
+        return $this->hasMany(Submission::class);
+    }
 }

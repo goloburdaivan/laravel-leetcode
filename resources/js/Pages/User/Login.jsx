@@ -1,95 +1,75 @@
-import React, { useState } from 'react';
-import { Head, useForm } from '@inertiajs/react';
-import { Box, Button, TextField, Typography, Container, Alert, Paper } from '@mui/material';
+import React from 'react';
+import { Container, Box, Paper, Typography } from '@mui/material';
+import { motion } from 'framer-motion';
+import TipOfTheDay from "@/Pages/Components/TipOfTheDay.jsx";
+import LoginForm from "@/Pages/Components/LoginForm.jsx";
 
 export default function Login() {
-    const { data, setData, post, processing, errors } = useForm({
-        email: '',
-        password: '',
-    });
-
-    const handleChange = (e) => {
-        setData(e.target.name, e.target.value);
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        post('/login');
-    };
-
     return (
         <Container
-            component="main"
-            maxWidth="xs"
+            maxWidth={false}
+            disableGutters
             sx={{
+                height: '100vh',
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '100vh', // Центрирование по вертикали
+                flexDirection: { xs: 'column', md: 'row' },
             }}
         >
-            <Head title="Login" />
-            <Paper
-                elevation={6}
+            <Box
                 sx={{
-                    padding: 4,
-                    borderRadius: 2,
-                    boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)', // Тень вокруг блока
+                    width: { xs: '100%', md: '50%' },
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: '#fff',
+                    padding: 2,
                 }}
             >
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                    }}
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ ease: "easeOut", duration: 1 }}
                 >
-                    <Typography component="h1" variant="h5">
-                        Login
-                    </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                        {errors.email && <Alert severity="error">{errors.email}</Alert>}
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
-                            autoFocus
-                            value={data.email}
-                            onChange={handleChange}
-                            error={!!errors.email}
-                            helperText={errors.email ? errors.email : ''}
-                        />
-                        {errors.password && <Alert severity="error">{errors.password}</Alert>}
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                            value={data.password}
-                            onChange={handleChange}
-                            error={!!errors.password}
-                            helperText={errors.password ? errors.password : ''}
-                        />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            disabled={processing}
+                    <Paper
+                        elevation={6}
+                        sx={{
+                            padding: 4,
+                            borderRadius: 2,
+                            boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
+                            width: '100%',
+                            maxWidth: '400px',
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                            }}
                         >
-                            Sign In
-                        </Button>
-                    </Box>
-                </Box>
-            </Paper>
+                            <Typography component="h1" variant="h5">
+                                Login
+                            </Typography>
+                            <LoginForm
+                                route={'/login'}
+                                registerRoute={'/register'}
+                            />
+                        </Box>
+                    </Paper>
+                </motion.div>
+            </Box>
+            <Box
+                sx={{
+                    width: { xs: '100%', md: '50%' },
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: { xs: '50vh', md: '100vh' },
+                    background: 'linear-gradient(90deg, #f5f5f5 0%, #e0e0e0 100%)',
+                }}
+            >
+                <TipOfTheDay />
+            </Box>
         </Container>
     );
 }

@@ -2,11 +2,14 @@
 namespace App\Repository\QueryBuilders;
 
 use App\Models\Submission;
+use App\Repository\Traits\HasPagination;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
 class SubmissionQueryBuilder
 {
+    use HasPagination;
+
     protected Builder $query;
 
     public function __construct()

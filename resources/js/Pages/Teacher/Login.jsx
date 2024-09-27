@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Box, Paper, Typography } from '@mui/material';
-import LoginForm from './Components/LoginForm';
-import TipOfTheDay from './Components/TipOfTheDay';
+import LoginForm from '../Components/LoginForm.jsx';
+import TipOfTheDay from '../Components/TipOfTheDay.jsx';
 import { motion } from 'framer-motion';
 
 export default function Login() {
@@ -50,7 +50,10 @@ export default function Login() {
                             <Typography component="h1" variant="h5">
                                 Login into Teacher Area
                             </Typography>
-                            <LoginForm />
+                            <LoginForm
+                                route={'/teacher/login'}
+                                registerRoute={'/teacher/register'}
+                            />
                         </Box>
                     </Paper>
                 </motion.div>

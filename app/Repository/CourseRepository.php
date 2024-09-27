@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Models\Course;
 use App\Models\Teacher;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 
 class CourseRepository
 {
@@ -11,8 +13,8 @@ class CourseRepository
     {
         $course = new Course();
         return $this->update($course, $data + [
-            'teacher_id' => $teacher->id,
-        ]);
+                'teacher_id' => $teacher->id,
+            ]);
     }
 
     public function update(Course $course, array $data): Course
@@ -23,5 +25,19 @@ class CourseRepository
         }
 
         return $course;
+    }
+
+    public function getUserCourses(User $user): Collection
+    {
+        return Course::query()
+            ->whereRelation('users', 'users.id', $user->id)
+            ->withCount(['labs as labs_with_passed_submissions_count' => function ($query) use ($user) {
+                $query->whereHas('submissions', function ($subQuery) use ($user) {
+                    $subQuery->where('passed', true)
+                        ->where('user_id', $user->id);
+                });
+            }])
+            ->withCount('labs')
+            ->get();
     }
 }

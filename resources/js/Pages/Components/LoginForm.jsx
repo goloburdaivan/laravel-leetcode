@@ -1,8 +1,8 @@
 import React from 'react';
-import {Box, Button, TextField, Typography, Alert, Link} from '@mui/material';
-import {router, useForm} from '@inertiajs/react';
+import {Box, Button, TextField, Typography, Alert } from '@mui/material';
+import { useForm } from '@inertiajs/react';
 
-export default function LoginForm() {
+export default function LoginForm({ route, registerRoute }) {
     const { data, setData, post, processing, errors } = useForm({
         email: '',
         password: '',
@@ -14,7 +14,7 @@ export default function LoginForm() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post('/teacher/login');
+        post(route);
     };
 
     return (
@@ -60,7 +60,7 @@ export default function LoginForm() {
             </Button>
             <Typography variant="body2" sx={{ textAlign: 'center' }}>
                 Don't have an account?{' '}
-                <a href="/teacher/register">
+                <a href={registerRoute}>
                     Register
                 </a>
             </Typography>

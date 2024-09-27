@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Toolbar,
     Typography,
@@ -15,19 +15,52 @@ import {
     Pagination,
     Container,
 } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
 import AddIcon from '@mui/icons-material/Add';
 import Navigation from "@/Pages/Components/Navigation.jsx";
+import { router } from '@inertiajs/react';
 
 const TeacherDashboard = ({ course, labs }) => {
-    const [search, setSearch] = useState('');
+    const [filters, setFilters] = useState({
+        id: '',
+        title: ''
+    });
 
-    const handleSearch = (e) => {
-        e.preventDefault();
+    // Initialize the current page from props or URL params
+    const [currentPage, setCurrentPage] = useState(labs.currentPage || 1);
+
+    useEffect(() => {
+        // Restore filters from the URL when the component mounts
+        const urlParams = new URLSearchParams(window.location.search);
+        setFilters({
+            id: urlParams.get('id') || '',
+            title: urlParams.get('title') || '',
+        });
+    }, []);
+
+    const handleFilterChange = (e) => {
+        setFilters({
+            ...filters,
+            [e.target.name]: e.target.value,
+        });
     };
 
-    const handleNewLab = () => {
-        alert('Redirect to create lab page');
+    const handleFilterSubmit = (e) => {
+        e.preventDefault();
+        const queryParams = {
+            id: filters.id,
+            title: filters.title,
+        };
+        router.get(`/teacher/courses/${course.id}`, queryParams);
+    };
+
+    const handlePageChange = (event, newPage) => {
+        setCurrentPage(newPage); // Update the current page in state
+        const queryParams = {
+            id: filters.id,
+            title: filters.title,
+            page: newPage, // Include the new page number in the query
+        };
+        router.get(`/teacher/courses/${course.id}`, queryParams);
     };
 
     return (
@@ -51,21 +84,27 @@ const TeacherDashboard = ({ course, labs }) => {
                         </Button>
                     </Box>
 
-                    <Box component="form" onSubmit={handleSearch} sx={{ mb: 4 }}>
+                    <Box component="form" onSubmit={handleFilterSubmit} sx={{ mb: 4, display: 'flex', gap: 2 }}>
                         <TextField
-                            label="Search labs..."
+                            label="Filter by ID"
+                            name="id"
                             variant="outlined"
-                            fullWidth
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            sx={{ mr: 2 }}
+                            value={filters.id}
+                            onChange={handleFilterChange}
+                        />
+                        <TextField
+                            label="Filter by Title"
+                            name="title"
+                            variant="outlined"
+                            value={filters.title}
+                            onChange={handleFilterChange}
                         />
                         <Button
                             variant="contained"
-                            color="secondary"
+                            color="primary"
                             type="submit"
                         >
-                            Search
+                            Apply Filters
                         </Button>
                     </Box>
 
@@ -80,7 +119,7 @@ const TeacherDashboard = ({ course, labs }) => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {labs.map((lab) => (
+                                {labs.paginated.map((lab) => (
                                     <TableRow key={lab.id}>
                                         <TableCell>{lab.id}</TableCell>
                                         <TableCell>{lab.title}</TableCell>
@@ -103,7 +142,9 @@ const TeacherDashboard = ({ course, labs }) => {
 
                     <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
                         <Pagination
-                            count={10}
+                            count={labs.totalPages}
+                            page={labs.page} // Use local state for current page
+                            onChange={handlePageChange} // Attach the page change handler
                             color="primary"
                             variant="outlined"
                         />

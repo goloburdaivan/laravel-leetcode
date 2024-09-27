@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Table,
     TableBody,
@@ -18,14 +18,13 @@ import {
     MenuItem,
     Snackbar,
     Alert,
+    Pagination,
 } from '@mui/material';
 
 const Submissions = ({ lab, fetchedSubmissions, statuses }) => {
     const [open, setOpen] = useState(false);
     const [selectedSubmission, setSelectedSubmission] = useState(null);
-    const [copySuccess, setCopySuccess] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
-
     const [studentIdFilter, setStudentIdFilter] = useState('');
     const [studentNameFilter, setStudentNameFilter] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
@@ -34,7 +33,6 @@ const Submissions = ({ lab, fetchedSubmissions, statuses }) => {
     const handleOpen = (submission) => {
         setSelectedSubmission(submission);
         setOpen(true);
-        setCopySuccess(false);
     };
 
     const handleClose = () => {
@@ -77,16 +75,18 @@ const Submissions = ({ lab, fetchedSubmissions, statuses }) => {
         }
     };
 
-    const fetchSubmissions = async () => {
+    const fetchSubmissions = async (page = 1) => {
         const params = new URLSearchParams();
         if (studentIdFilter) params.append('student_id', studentIdFilter);
         if (studentNameFilter) params.append('student_name', studentNameFilter);
         if (statusFilter) params.append('status', statusFilter);
+        params.append('page', page); // Include current page
 
         try {
             const response = await fetch(`/teacher/labs/${lab.id}/submissions?${params.toString()}`);
             const data = await response.json();
             setSubmissions(data.submissions);
+            setTotalPages(data.total_pages); // Set total pages from response
         } catch (error) {
             console.error("Error fetching submissions:", error);
         }
@@ -94,7 +94,13 @@ const Submissions = ({ lab, fetchedSubmissions, statuses }) => {
 
     const handleFilterSubmit = (e) => {
         e.preventDefault();
-        fetchSubmissions();
+        setCurrentPage(1);
+        fetchSubmissions(1);
+    };
+
+    const handlePageChange = (event, value) => {
+        setCurrentPage(value);
+        fetchSubmissions(value);
     };
 
     const handleSnackbarClose = () => {
@@ -148,7 +154,7 @@ const Submissions = ({ lab, fetchedSubmissions, statuses }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {submissions.map((submission) => (
+                        {submissions.paginated.map((submission) => (
                             <TableRow key={submission.id}>
                                 <TableCell>{submission.id}</TableCell>
                                 <TableCell>
@@ -180,57 +186,62 @@ const Submissions = ({ lab, fetchedSubmissions, statuses }) => {
                         ))}
                     </TableBody>
                 </Table>
-                <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-                    <DialogTitle>Submission Details</DialogTitle>
-                    <DialogContent>
-                        {selectedSubmission && (
-                            <Box>
-                                <Typography variant="h6" gutterBottom>
-                                    Source Code
-                                </Typography>
-                                <Box
-                                    sx={{
-                                        backgroundColor: '#f5f5f5',
-                                        padding: 2,
-                                        borderRadius: 1,
-                                        fontFamily: 'monospace',
-                                        whiteSpace: 'pre-wrap',
-                                        overflowX: 'auto',
-                                        maxHeight: '400px',
-                                    }}
-                                >
-                                    {selectedSubmission.source_code}
-                                </Box>
-                                <Button variant="outlined" onClick={handleCopyCode} sx={{ mt: 2 }}>
-                                    Copy Code
-                                </Button>
-                                {copySuccess && (
-                                    <Typography variant="body2" color="success.main" sx={{ mt: 1 }}>
-                                        {copySuccess}
-                                    </Typography>
-                                )}
-
-                                <Typography variant="h6" gutterBottom mt={3}>
-                                    Output
-                                </Typography>
-                                <Box
-                                    sx={{
-                                        backgroundColor: '#f5f5f5',
-                                        padding: 2,
-                                        borderRadius: 1,
-                                        fontFamily: 'monospace',
-                                        whiteSpace: 'pre-wrap',
-                                        overflowX: 'auto',
-                                        maxHeight: '200px',
-                                    }}
-                                >
-                                    {selectedSubmission.output}
-                                </Box>
-                            </Box>
-                        )}
-                    </DialogContent>
-                </Dialog>
             </TableContainer>
+
+            <Pagination
+                count={submissions.totalPages}
+                page={submissions.page}
+                onChange={handlePageChange}
+                variant="outlined"
+                shape="rounded"
+                style={{ marginTop: '16px', display: 'flex', justifyContent: 'center' }}
+            />
+
+            <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
+                <DialogTitle>Submission Details</DialogTitle>
+                <DialogContent>
+                    {selectedSubmission && (
+                        <Box>
+                            <Typography variant="h6" gutterBottom>
+                                Source Code
+                            </Typography>
+                            <Box
+                                sx={{
+                                    backgroundColor: '#f5f5f5',
+                                    padding: 2,
+                                    borderRadius: 1,
+                                    fontFamily: 'monospace',
+                                    whiteSpace: 'pre-wrap',
+                                    overflowX: 'auto',
+                                    maxHeight: '400px',
+                                }}
+                            >
+                                {selectedSubmission.source_code}
+                            </Box>
+                            <Button variant="outlined" onClick={handleCopyCode} sx={{ mt: 2 }}>
+                                Copy Code
+                            </Button>
+
+                            <Typography variant="h6" gutterBottom mt={3}>
+                                Output
+                            </Typography>
+                            <Box
+                                sx={{
+                                    backgroundColor: '#f5f5f5',
+                                    padding: 2,
+                                    borderRadius: 1,
+                                    fontFamily: 'monospace',
+                                    whiteSpace: 'pre-wrap',
+                                    overflowX: 'auto',
+                                    maxHeight: '200px',
+                                }}
+                            >
+                                {selectedSubmission.output}
+                            </Box>
+                        </Box>
+                    )}
+                </DialogContent>
+            </Dialog>
 
             <Snackbar
                 open={snackbarOpen}

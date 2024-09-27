@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import { Container, Typography, Paper, Box, Tabs, Tab, CircularProgress } from '@mui/material';
 import { useForm } from '@inertiajs/react';
-import axios from 'axios'; // Import Axios for API requests
 import LabForm from './Components/LabForm.jsx';
 import Navigation from "@/Pages/Components/Navigation.jsx";
 import TestCases from "@/Pages/Teacher/Lab/Components/TestCases.jsx";
 import Submissions from "@/Pages/Teacher/Lab/Components/Submissions.jsx";
+import Tips from '@/Pages/Teacher/Lab/Components/Tips.jsx';
 
 const EditLab = ({ lab, lists }) => {
     const { data, setData, put } = useForm({
@@ -39,7 +40,7 @@ const EditLab = ({ lab, lists }) => {
     const fetchSubmissions = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`/teacher/labs/${lab.id}/submissions`);
+            const response = await axios.get(`/teacher/labs/${lab.id}/submissions?page=1`);
             setSubmissions(response.data.submissions);
         } catch (error) {
             console.error("Error fetching submissions:", error);
@@ -79,6 +80,7 @@ const EditLab = ({ lab, lists }) => {
                             >
                                 <Tab label="Test Cases" />
                                 <Tab label="Submissions" />
+                                <Tab label="Tips" /> {/* New Tab for Tips */}
                             </Tabs>
 
                             {tabIndex === 0 && (
@@ -104,6 +106,12 @@ const EditLab = ({ lab, lists }) => {
                                             fetchedSubmissions={submissions}
                                         />
                                     )}
+                                </Box>
+                            )}
+
+                            {tabIndex === 2 && (
+                                <Box mt={2}>
+                                    <Tips lab={lab} />
                                 </Box>
                             )}
                         </Box>

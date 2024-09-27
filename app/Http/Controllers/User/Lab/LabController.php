@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\User\Lab;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SubmitCodeRequest;
 use App\Models\Lab;
 use App\Services\SubmissionService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class LabController extends Controller
 {

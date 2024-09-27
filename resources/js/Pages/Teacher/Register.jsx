@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Box } from '@mui/material';
 import RegistrationForm from './Components/RegistrationForm.jsx';
-import TipOfTheDay from "./Components/TipOfTheDay.jsx";
+import TipOfTheDay from "../Components/TipOfTheDay.jsx";
 
 export default function Register() {
     return (
