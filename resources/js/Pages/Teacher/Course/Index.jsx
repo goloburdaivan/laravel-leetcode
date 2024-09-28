@@ -25,11 +25,9 @@ const TeacherDashboard = ({ course, labs }) => {
         title: ''
     });
 
-    // Initialize the current page from props or URL params
     const [currentPage, setCurrentPage] = useState(labs.currentPage || 1);
 
     useEffect(() => {
-        // Restore filters from the URL when the component mounts
         const urlParams = new URLSearchParams(window.location.search);
         setFilters({
             id: urlParams.get('id') || '',

@@ -32,6 +32,7 @@ const TestCasesComponent = ({ lab }) => {
             <Grid container spacing={2}>
                 <Grid item xs={5}>
                     <TextField
+                        multiline
                         fullWidth
                         label="Input"
                         value={data.input}

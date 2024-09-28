@@ -35,6 +35,12 @@ class LabQueryBuilder
         return $this;
     }
 
+    public function loadRelations(array $relations = []): self
+    {
+        $this->query->with($relations);
+        return $this;
+    }
+
     public function filter(array $args): self
     {
         if (!empty($args['title'])) {
@@ -46,5 +52,10 @@ class LabQueryBuilder
         }
 
         return $this;
+    }
+
+    public function first(): ?Lab
+    {
+        return $this->query->first();
     }
 }

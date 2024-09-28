@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\ExecutionStatus;
 use App\Jobs\ExecuteCodeJob;
 use App\Models\Lab;
+use App\Models\Submission;
 use App\Models\User;
 use App\Repository\SubmissionRepository;
 
@@ -18,7 +19,7 @@ class SubmissionService
     /**
      * @throws \Exception
      */
-    public function submit(User $user, Lab $lab, string $sourceCode): void
+    public function submit(User $user, Lab $lab, string $sourceCode): Submission
     {
         $submission = $this->repository->create([
             'user_id' => $user->id,
@@ -28,5 +29,7 @@ class SubmissionService
         ]);
 
         ExecuteCodeJob::dispatch($submission);
+
+        return $submission;
     }
 }

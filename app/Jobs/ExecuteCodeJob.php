@@ -57,6 +57,10 @@ class ExecuteCodeJob implements ShouldQueue
                     'passed' => false,
                     'status' => ExecutionStatus::FAILED,
                 ]);
+                $removeProcess = new Process([
+                    'docker', 'rm', '-f', $containerName,
+                ]);
+                $removeProcess->run();
                 return;
             }
 

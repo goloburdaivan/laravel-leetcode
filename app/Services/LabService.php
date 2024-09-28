@@ -17,10 +17,11 @@ use Illuminate\Database\Eloquent\Collection;
 class LabService
 {
     public function __construct(
-        private readonly LabRepository $labRepository,
+        private readonly LabRepository      $labRepository,
         private readonly TestCaseRepository $testCaseRepository,
-        private readonly LabTipRepository $labTipRepository,
-    ) {
+        private readonly LabTipRepository   $labTipRepository,
+    )
+    {
     }
 
     public function create(Course $course, EditLabRequest $request): Lab
@@ -29,7 +30,7 @@ class LabService
         return $this->labRepository->create($data + [
                 'creator_id' => $request->user()->id,
                 'course_id' => $course->id,
-        ]);
+            ]);
     }
 
     public function update(Lab $lab, EditLabRequest $request): Lab
@@ -43,20 +44,37 @@ class LabService
     public function addTestCase(Lab $lab, CreateTestCaseRequest $request): TestCase
     {
         return $this->testCaseRepository->create($request->validated() + [
-            'lab_id' => $lab->id,
-        ]);
+                'lab_id' => $lab->id,
+            ]);
     }
 
     public function addTip(Lab $lab, CreateLabTipRequest $request): LabTip
     {
         return $this->labTipRepository->create($request->validated() + [
-            'lab_id' => $lab->id,
-        ]);
+                'lab_id' => $lab->id,
+            ]);
     }
 
     public function getLabWithTestCases(Lab $lab)
     {
         return $this->labRepository->loadTestCases($lab);
+    }
+
+    public function getLabWithDetails(Lab $lab): ?Lab
+    {
+        return $this->labRepository
+            ->query()
+            ->byId($lab->id)
+            ->loadRelations([
+                'testCases',
+                'submissions' => function($query) {
+                    $query
+                        ->orderByDesc('created_at')
+                        ->limit(5);
+                },
+                'tips',
+            ])
+            ->first();
     }
 
     public function getLabTips(Lab $lab): Collection

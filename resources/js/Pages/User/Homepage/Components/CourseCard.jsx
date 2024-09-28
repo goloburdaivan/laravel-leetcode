@@ -21,7 +21,7 @@ const CourseCard = ({ course }) => (
                     <Typography variant="body2" color="textSecondary">Прогрес %: {(course.labs_with_passed_submissions_count / course.labs_count) * 100}%</Typography>
                 </Grid>
                 <Grid item>
-                    <Button variant="outlined" size="small" color="primary">
+                    <Button href={`/courses/${course.id}`} variant="outlined" size="small" color="primary">
                         Відкрити
                     </Button>
                 </Grid>

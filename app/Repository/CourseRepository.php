@@ -40,4 +40,19 @@ class CourseRepository
             ->withCount('labs')
             ->get();
     }
+
+    public function loadCourseProgress(User $user, Course $course): ?Course
+    {
+        return Course::query()
+            ->where('id', $course->id)
+            ->whereRelation('users', 'users.id', $user->id)
+            ->withCount(['labs as labs_with_passed_submissions_count' => function ($query) use ($user) {
+                $query->whereHas('submissions', function ($subQuery) use ($user) {
+                    $subQuery->where('passed', true)
+                        ->where('user_id', $user->id);
+                });
+            }])
+            ->withCount('labs')
+            ->first();
+    }
 }

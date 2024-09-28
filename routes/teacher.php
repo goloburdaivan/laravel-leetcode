@@ -42,8 +42,7 @@ Route::controller(CourseController::class)->group(function() {
         ->can('view', 'course');
 
     Route::post('/courses/{course}/invite', 'invite')
-        ->name('teacher.courses.invite')
-        ->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class);
+        ->name('teacher.courses.invite');
 });
 
 Route::controller(CourseLabsController::class)->group(function() {

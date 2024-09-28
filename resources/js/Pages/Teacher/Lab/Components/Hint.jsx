@@ -13,7 +13,7 @@ const Hint = ({ tip, number }) => {
             >
                 <Box display="flex" alignItems="center">
                     <EmojiObjectsIcon sx={{ mr: 1 }} />
-                    <Typography variant="subtitle1">Hint {number}</Typography>
+                    <Typography variant="subtitle1">Підказка {number}</Typography>
                 </Box>
             </AccordionSummary>
             <AccordionDetails>
