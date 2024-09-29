@@ -29,6 +29,8 @@ const Submissions = ({ lab, fetchedSubmissions, statuses }) => {
     const [studentNameFilter, setStudentNameFilter] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
     const [submissions, setSubmissions] = useState(fetchedSubmissions);
+    const [currentPage, setCurrentPage] = useState(1); // Added state for currentPage
+    const [totalPages, setTotalPages] = useState(fetchedSubmissions.totalPages);
 
     const handleOpen = (submission) => {
         setSelectedSubmission(submission);
@@ -75,7 +77,7 @@ const Submissions = ({ lab, fetchedSubmissions, statuses }) => {
         }
     };
 
-    const fetchSubmissions = async (page = 1) => {
+    const fetchSubmissions = async (page = currentPage) => {
         const params = new URLSearchParams();
         if (studentIdFilter) params.append('student_id', studentIdFilter);
         if (studentNameFilter) params.append('student_name', studentNameFilter);
@@ -86,7 +88,7 @@ const Submissions = ({ lab, fetchedSubmissions, statuses }) => {
             const response = await fetch(`/teacher/labs/${lab.id}/submissions?${params.toString()}`);
             const data = await response.json();
             setSubmissions(data.submissions);
-            setTotalPages(data.total_pages); // Set total pages from response
+            setTotalPages(data.submissions.totalPages);
         } catch (error) {
             console.error("Error fetching submissions:", error);
         }
@@ -189,8 +191,8 @@ const Submissions = ({ lab, fetchedSubmissions, statuses }) => {
             </TableContainer>
 
             <Pagination
-                count={submissions.totalPages}
-                page={submissions.page}
+                count={totalPages}
+                page={currentPage}  // Updated to use currentPage
                 onChange={handlePageChange}
                 variant="outlined"
                 shape="rounded"

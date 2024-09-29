@@ -200,9 +200,9 @@ export default function LabPage({ lab }) {
                                             whiteSpace: 'pre-wrap',
                                             overflowX: 'auto'
                                         }}>
-                                            {testCase.input.split('\n').map((str, idx) => (
+                                            {testCase.input ? testCase.input.split('\n').map((str, idx) => (
                                                 <span key={idx}>{str}<br/></span>
-                                            ))}
+                                            )) : testCase.input}
                                         </Box>
 
                                         <Typography variant="body2" sx={{ fontWeight: 'bold', mt: 1 }}>
