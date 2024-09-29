@@ -177,23 +177,50 @@ export default function LabPage({ lab }) {
                     <Button variant="contained" color="primary" onClick={handleSubmit} sx={{ mb: 2 }}>
                         Відправити
                     </Button>
-
                     <StyledCard>
                         <CardContent>
                             <Typography variant="h6" gutterBottom>Тестові кейси</Typography>
                             <Divider sx={{ mb: 2 }} />
                             <Box>
-                                {lab.test_cases.map((testCase, index) => (
+                                {lab.test_cases.slice(0, 2).map((testCase, index) => (
                                     <Box key={index} sx={{ mb: 2 }}>
                                         <Typography variant="body2" color="text.secondary">
                                             Тест-кейс {index + 1}:
                                         </Typography>
-                                        <Typography variant="body2">
-                                            Вхід: {testCase.input}
+
+                                        <Typography variant="body2" sx={{ fontWeight: 'bold', mt: 1 }}>
+                                            Вхід:
                                         </Typography>
-                                        <Typography variant="body2">
-                                            Очікуваний результат: {testCase.expected_output}
+                                        <Box sx={{
+                                            backgroundColor: '#f5f5f5',
+                                            padding: '10px',
+                                            borderRadius: '5px',
+                                            border: '1px solid #e0e0e0',
+                                            fontFamily: 'Courier, monospace',
+                                            whiteSpace: 'pre-wrap',
+                                            overflowX: 'auto'
+                                        }}>
+                                            {testCase.input.split('\n').map((str, idx) => (
+                                                <span key={idx}>{str}<br/></span>
+                                            ))}
+                                        </Box>
+
+                                        <Typography variant="body2" sx={{ fontWeight: 'bold', mt: 1 }}>
+                                            Очікуваний результат:
                                         </Typography>
+                                        <Box sx={{
+                                            backgroundColor: '#f0f8ff',
+                                            padding: '10px',
+                                            borderRadius: '5px',
+                                            border: '1px solid #e0e0e0',
+                                            fontFamily: 'Courier, monospace',
+                                            whiteSpace: 'pre-wrap',
+                                            overflowX: 'auto'
+                                        }}>
+                                            {testCase.expected_output.split('\n').map((str, idx) => (
+                                                <span key={idx}>{str}<br/></span>
+                                            ))}
+                                        </Box>
                                     </Box>
                                 ))}
                             </Box>

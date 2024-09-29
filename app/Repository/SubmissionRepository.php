@@ -39,6 +39,7 @@ class SubmissionRepository
             ->with('lab')
             ->withCount('testCases')
             ->limit(5)
+            ->orderByDesc('created_at')
             ->get();
     }
 

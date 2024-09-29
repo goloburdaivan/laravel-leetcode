@@ -1,10 +1,24 @@
-import React, { useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Grid, Button, IconButton, Skeleton } from '@mui/material';
-import { Delete } from '@mui/icons-material';
-import { useForm } from '@inertiajs/react';
+import React, {useState} from 'react';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+    TextField,
+    Grid,
+    Button,
+    IconButton,
+    Skeleton,
+    Box
+} from '@mui/material';
+import {Delete} from '@mui/icons-material';
+import {useForm} from '@inertiajs/react';
 
-const TestCasesComponent = ({ lab }) => {
-    const { data, setData, post, reset } = useForm({
+const TestCasesComponent = ({lab}) => {
+    const {data, setData, post, reset} = useForm({
         input: '',
         expected_output: ''
     });
@@ -28,7 +42,7 @@ const TestCasesComponent = ({ lab }) => {
     };
 
     return (
-        <Paper sx={{ p: 3 }}>
+        <Paper sx={{p: 3}}>
             <Grid container spacing={2}>
                 <Grid item xs={5}>
                     <TextField
@@ -41,6 +55,7 @@ const TestCasesComponent = ({ lab }) => {
                 </Grid>
                 <Grid item xs={5}>
                     <TextField
+                        multiline
                         fullWidth
                         label="Expected Output"
                         value={data.expected_output}
@@ -59,7 +74,7 @@ const TestCasesComponent = ({ lab }) => {
                 </Grid>
             </Grid>
 
-            <TableContainer component={Paper} sx={{ mt: 4 }}>
+            <TableContainer component={Paper} sx={{mt: 4}}>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -71,27 +86,58 @@ const TestCasesComponent = ({ lab }) => {
                     <TableBody>
                         {lab.test_cases.map((testCase, index) => (
                             <TableRow key={index}>
-                                <TableCell>{testCase.input}</TableCell>
-                                <TableCell>{testCase.expected_output}</TableCell>
+                                <TableCell>
+                                    <Box sx={{
+                                        backgroundColor: '#f5f5f5',
+                                        padding: '10px',
+                                        borderRadius: '5px',
+                                        border: '1px solid #e0e0e0',
+                                        fontFamily: 'Courier, monospace',
+                                        whiteSpace: 'pre-wrap',
+                                        overflowX: 'auto'
+                                    }}>
+                                        {
+                                            testCase.input ?
+                                                testCase.input.split('\n').map((str, idx) => (
+                                                    <span key={idx}>{str}<br/></span>
+                                                ))
+                                            : testCase.input
+                                        }
+                                    </Box>
+                                </TableCell>
+                                <TableCell>
+                                    <Box sx={{
+                                        backgroundColor: '#f0f8ff',
+                                        padding: '10px',
+                                        borderRadius: '5px',
+                                        border: '1px solid #e0e0e0',
+                                        fontFamily: 'Courier, monospace',
+                                        whiteSpace: 'pre-wrap',
+                                        overflowX: 'auto'
+                                    }}>
+                                        {testCase.expected_output.split('\n').map((str, idx) => (
+                                            <span key={idx}>{str}<br/></span>
+                                        ))}
+                                    </Box>
+                                </TableCell>
                                 <TableCell align="right">
                                     <IconButton color="secondary">
-                                        <Delete />
+                                        <Delete/>
                                     </IconButton>
                                 </TableCell>
                             </TableRow>
                         ))}
 
-                        {/* Render skeleton row while loading */}
                         {loading && (
                             <TableRow>
                                 <TableCell>
-                                    <Skeleton variant="text" width="80%" />
+                                    <Skeleton variant="text" width="80%"/>
                                 </TableCell>
                                 <TableCell>
-                                    <Skeleton variant="text" width="80%" />
+                                    <Skeleton variant="text" width="80%"/>
                                 </TableCell>
                                 <TableCell align="right">
-                                    <Skeleton variant="circular" width={40} height={40} />
+                                    <Skeleton variant="circular" width={40} height={40}/>
                                 </TableCell>
                             </TableRow>
                         )}

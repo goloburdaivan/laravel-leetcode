@@ -18,7 +18,7 @@ const LabCard = ({ lab }) => (
                     </Typography>
                 </Grid>
                 <Grid item>
-                    <Button variant="outlined" size="small" color="primary">
+                    <Button href={`/labs/${lab.id}`} variant="outlined" size="small" color="primary">
                         Відкрити
                     </Button>
                 </Grid>

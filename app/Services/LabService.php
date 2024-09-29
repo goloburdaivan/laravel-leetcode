@@ -9,6 +9,7 @@ use App\Models\Course;
 use App\Models\Lab;
 use App\Models\LabTip;
 use App\Models\TestCase;
+use App\Models\User;
 use App\Repository\LabRepository;
 use App\Repository\LabTipRepository;
 use App\Repository\TestCaseRepository;
@@ -60,15 +61,16 @@ class LabService
         return $this->labRepository->loadTestCases($lab);
     }
 
-    public function getLabWithDetails(Lab $lab): ?Lab
+    public function getLabWithDetailsForUser(Lab $lab, User $user): ?Lab
     {
         return $this->labRepository
             ->query()
             ->byId($lab->id)
             ->loadRelations([
                 'testCases',
-                'submissions' => function($query) {
+                'submissions' => function($query) use ($user) {
                     $query
+                        ->where('user_id', $user->id)
                         ->orderByDesc('created_at')
                         ->limit(5);
                 },

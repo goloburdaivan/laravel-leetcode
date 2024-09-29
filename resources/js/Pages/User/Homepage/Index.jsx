@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Typography, Container, Grid, Card, CardContent, List, Box, Snackbar, Alert} from '@mui/material';
+import {Typography, Container, Grid, Card, CardContent, List, Box, Snackbar, Alert, Table, TableBody, TableCell, TableHead, TableRow, Paper} from '@mui/material';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -31,15 +31,13 @@ ChartJS.register(
 );
 
 export default function StudentDashboard({
-    labs,
-    submissions,
-    courses,
-}) {
+                                             labs,
+                                             submissions,
+                                             courses,
+                                             topStudents, // Добавляем список топ студентов
+                                         }) {
     const {props} = usePage();
     const {errors} = props;
-
-    console.log(courses);
-
     const [openSnackbar, setOpenSnackbar] = useState(false);
 
     useEffect(() => {
@@ -51,7 +49,6 @@ export default function StudentDashboard({
     const handleCloseSnackbar = () => {
         setOpenSnackbar(false);
     };
-
 
     return (
         <Box sx={{backgroundColor: '#f5f5f5', minHeight: '100vh', padding: 10}}>
@@ -83,8 +80,27 @@ export default function StudentDashboard({
                             <CourseCard key={index} course={course}/>
                         ))}
 
-                        <ProgressChart/>
-                        <CourseProgressChart/>
+                        <Typography variant="h5" gutterBottom style={{marginTop: 20}}>Топ студентов</Typography>
+                        <Paper>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>№</TableCell>
+                                        <TableCell>Студет</TableCell>
+                                        <TableCell>Кількість вирішених лаб</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {topStudents.map((student, index) => (
+                                        <TableRow key={index}>
+                                            <TableCell>{index + 1}</TableCell>
+                                            <TableCell>{student.name}</TableCell>
+                                            <TableCell>{student.passed_labs_count}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </Paper>
                     </Grid>
                 </Grid>
             </Container>

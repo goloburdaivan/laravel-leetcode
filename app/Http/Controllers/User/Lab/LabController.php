@@ -22,7 +22,7 @@ class LabController extends Controller
 
     public function show(Lab $lab): Response
     {
-        $lab = $this->labService->getLabWithDetails($lab);
+        $lab = $this->labService->getLabWithDetailsForUser($lab, auth('user')->user());
 
         return Inertia::render('User/Lab/Index', [
             'lab' => $lab,

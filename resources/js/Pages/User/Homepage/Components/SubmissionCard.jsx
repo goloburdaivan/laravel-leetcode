@@ -2,6 +2,7 @@ import {Avatar, ListItem, ListItemText, Typography, Chip, Dialog, DialogTitle, D
 import {Send} from "@mui/icons-material";
 import React, {useState} from "react";
 import axios from "axios";
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 
 const SubmissionCard = ({submission}) => {
     const [openModal, setOpenModal] = useState(false);
@@ -58,8 +59,9 @@ const SubmissionCard = ({submission}) => {
                     }
                 />
                 <Avatar>
-                    <Send
+                    <RemoveRedEyeIcon
                         onClick={handleOpenModal}
+                        sx={{ cursor: 'pointer' }}
                     />
                 </Avatar>
             </ListItem>
