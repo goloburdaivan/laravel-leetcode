@@ -26,6 +26,7 @@ services:
             - DB_PASSWORD=${DB_PASSWORD}
             - QUEUE_CONNECTION=database
         volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
             - .:/var/www
         networks:
             - laravel_network
