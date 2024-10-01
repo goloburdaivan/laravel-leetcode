@@ -41,7 +41,10 @@ const StyledModalBox = styled(Box)(({ theme }) => ({
 
 export default function LabPage({ lab }) {
     const [tabValue, setTabValue] = useState(0);
-    const [code, setCode] = useState(lab.starter_code);
+    const [code, setCode] = useState(
+        lab.submissions.length > 0 ?
+            lab.submissions[0].source_code
+            : lab.starter_code);
     const [output, setOutput] = useState('');
     const [pollingInterval, setPollingInterval] = useState(null);
     const [snackbarOpen, setSnackbarOpen] = useState(false);

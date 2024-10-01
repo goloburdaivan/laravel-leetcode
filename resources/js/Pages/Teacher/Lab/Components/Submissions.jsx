@@ -29,7 +29,7 @@ const Submissions = ({ lab, fetchedSubmissions, statuses }) => {
     const [studentNameFilter, setStudentNameFilter] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
     const [submissions, setSubmissions] = useState(fetchedSubmissions);
-    const [currentPage, setCurrentPage] = useState(1); // Added state for currentPage
+    const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(fetchedSubmissions.totalPages);
 
     const handleOpen = (submission) => {
