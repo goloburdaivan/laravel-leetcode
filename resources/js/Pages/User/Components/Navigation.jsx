@@ -38,7 +38,7 @@ export default function Navigation() {
                 <Toolbar>
                     <Typography variant="h6" sx={{ flexGrow: 1 }}>
                         <Link href="/" style={{ color: 'inherit', textDecoration: 'none' }}>
-                            Dashboard
+                            Lab Tester
                         </Link>
                     </Typography>
 
