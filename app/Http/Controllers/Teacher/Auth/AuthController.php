@@ -51,9 +51,9 @@ class AuthController extends Controller
         return response()->redirectTo(route('teacher.index'));
     }
 
-    public function logout(Request $request): Response
+    public function logout(Request $request): RedirectResponse
     {
         $this->teacherService->logout($request);
-        return response()->noContent();
+        return redirect()->route('teacher.auth.index');
     }
 }

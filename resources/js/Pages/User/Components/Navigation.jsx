@@ -1,18 +1,6 @@
-import {
-    AppBar,
-    Button,
-    Drawer,
-    IconButton,
-    List,
-    ListItem,
-    ListItemText,
-    Snackbar,
-    Toolbar,
-    Typography
-} from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import React, {useState} from "react";
-import {Link, router, usePage} from "@inertiajs/react";
+import { AppBar, Button, Snackbar, Toolbar, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { usePage, Link, router } from "@inertiajs/react";
 
 export default function Navigation() {
     const { props } = usePage();
@@ -27,7 +15,7 @@ export default function Navigation() {
 
     const handleLogout = (e) => {
         e.preventDefault();
-        router.post('/teacher/logout');
+        router.post('/logout');
     };
 
     const handleCopyId = () => {
@@ -49,7 +37,7 @@ export default function Navigation() {
             <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
                 <Toolbar>
                     <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                        <Link href="/teacher" style={{ color: 'inherit', textDecoration: 'none' }}>
+                        <Link href="/" style={{ color: 'inherit', textDecoration: 'none' }}>
                             Dashboard
                         </Link>
                     </Typography>
@@ -72,4 +60,3 @@ export default function Navigation() {
         </>
     );
 }
-

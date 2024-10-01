@@ -18,9 +18,9 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/system';
 import { Editor } from "@monaco-editor/react";
-import Navigation from "@/Pages/Components/Navigation.jsx";
 import Hint from "@/Pages/Teacher/Lab/Components/Hint.jsx";
 import SubmissionCard from "@/Pages/User/Lab/Components/SubmissionCard.jsx";
+import Navigation from "@/Pages/User/Components/Navigation.jsx";
 
 const StyledCard = styled(Card)(({ theme }) => ({
     height: '100%',

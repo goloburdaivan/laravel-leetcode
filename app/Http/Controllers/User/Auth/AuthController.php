@@ -50,9 +50,9 @@ class AuthController extends Controller
         return response()->redirectTo(Routes::CUSTOMER_HOME);
     }
 
-    public function logout(Request $request): Response
+    public function logout(Request $request): RedirectResponse
     {
         $this->userService->logout($request);
-        return response()->noContent();
+        return redirect()->route('user.auth.index');
     }
 }

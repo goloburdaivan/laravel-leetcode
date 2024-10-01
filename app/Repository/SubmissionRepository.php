@@ -50,6 +50,7 @@ class SubmissionRepository
             ->whereRelation('lab.course', 'id', $course->id)
             ->with('lab')
             ->withCount('testCases')
+            ->orderByDesc('created_at')
             ->limit(5)
             ->get();
     }

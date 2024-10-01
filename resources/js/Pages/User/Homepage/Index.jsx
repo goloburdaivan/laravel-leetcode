@@ -12,12 +12,12 @@ import {
     Legend
 } from 'chart.js';
 import {usePage} from '@inertiajs/react';
-import Navigation from "@/Pages/Components/Navigation.jsx";
 import LabCard from "@/Pages/User/Homepage/Components/LabCard.jsx";
 import SubmissionCard from "@/Pages/User/Homepage/Components/SubmissionCard.jsx";
 import CourseCard from "@/Pages/User/Homepage/Components/CourseCard.jsx";
 import ProgressChart from "@/Pages/User/Homepage/Components/ProgressChart.jsx";
 import CourseProgressChart from "@/Pages/User/Homepage/Components/CourseProgressChart.jsx";
+import Navigation from "@/Pages/User/Components/Navigation.jsx";
 
 ChartJS.register(
     CategoryScale,

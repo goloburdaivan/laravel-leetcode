@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Typography, Container, Grid, Card, CardContent, IconButton, Collapse, Box, Snackbar, Alert, Button, Divider, LinearProgress } from '@mui/material';
 import { ExpandMore as ExpandMoreIcon, Visibility as VisibilityIcon } from '@mui/icons-material';
-import Navigation from "@/Pages/Components/Navigation.jsx";
 import LabIcon from '@mui/icons-material/Science';
 import { styled } from '@mui/system';
 import SubmissionCard from "@/Pages/User/Homepage/Components/SubmissionCard.jsx";
+import Navigation from "@/Pages/User/Components/Navigation.jsx";
 
 const StyledCard = styled(Card)(({ theme }) => ({
     transition: 'transform 0.3s ease, box-shadow 0.3s ease',
