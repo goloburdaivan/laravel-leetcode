@@ -26,5 +26,11 @@ jobs:
             git pull origin main
             docker-compose down
             docker-compose up -d --build
-            docker exec -it laravel_app php artisan migrate
-            docker exec -it laravel_app npm run build
+
+            echo "Waiting for the container to start..."
+            until docker exec laravel_app ls >/dev/null 2>&1; do
+              sleep 1
+            done
+
+            docker exec laravel_app php artisan migrate --force
+            docker exec laravel_app npm run build
