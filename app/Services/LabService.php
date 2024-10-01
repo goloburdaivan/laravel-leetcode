@@ -21,8 +21,7 @@ class LabService
         private readonly LabRepository      $labRepository,
         private readonly TestCaseRepository $testCaseRepository,
         private readonly LabTipRepository   $labTipRepository,
-    )
-    {
+    ) {
     }
 
     public function create(Course $course, EditLabRequest $request): Lab
@@ -31,7 +30,7 @@ class LabService
         return $this->labRepository->create($data + [
                 'creator_id' => $request->user()->id,
                 'course_id' => $course->id,
-            ]);
+        ]);
     }
 
     public function update(Lab $lab, EditLabRequest $request): Lab
@@ -53,7 +52,7 @@ class LabService
     {
         return $this->labTipRepository->create($request->validated() + [
                 'lab_id' => $lab->id,
-            ]);
+        ]);
     }
 
     public function getLabWithTestCases(Lab $lab)

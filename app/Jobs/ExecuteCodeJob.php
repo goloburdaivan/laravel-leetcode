@@ -6,9 +6,9 @@ use App\Enums\ExecutionStatus;
 use App\Models\Submission;
 use App\Repository\SubmissionRepository;
 use App\Repository\TestCaseRepository;
+use App\Services\CodeExecution\LanguageExecutorFactory;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Symfony\Component\Process\Process;
 
 class ExecuteCodeJob implements ShouldQueue
 {
@@ -30,67 +30,58 @@ class ExecuteCodeJob implements ShouldQueue
         SubmissionRepository $repository,
         TestCaseRepository $testCaseRepository,
     ): void {
+        $language = $this->submission->lab->language;
+        $executor = LanguageExecutorFactory::create($language);
+
         $containerName = 'submission' . $this->submission->id;
-        $runProcess = new Process([
-            'docker', 'run', '-d', '--name', $containerName, 'python:3.9',
-            'sleep', 'infinity',
-        ]);
-        $runProcess->run();
 
-        if (!$runProcess->isSuccessful()) {
-            throw new \Exception('Failed to start Docker container: ' . $runProcess->getErrorOutput());
-        }
+        try {
+            $executor->startContainer($containerName);
+            $testCases = $testCaseRepository->getTestCases($this->submission->lab);
+            $allPassed = true;
 
-        $testCases = $testCaseRepository->getTestCases($this->submission->lab);
-        $allPassed = true;
+            foreach ($testCases as $testCase) {
+                $result = $executor->executeCode(
+                    $containerName,
+                    $this->submission->source_code,
+                    $testCase->input
+                );
 
-        foreach ($testCases as $testCase) {
-            $testProcess = new Process([
-                'docker', 'exec', '-i', $containerName, 'python', '-c', $this->submission->source_code,
+                if (!$result->isSuccessful()) {
+                    $repository->update($this->submission, [
+                        'output' => $result->getErrorOutput(),
+                        'passed' => false,
+                        'status' => ExecutionStatus::FAILED,
+                    ]);
+                    return;
+                }
+
+                $output = trim($result->getOutput());
+                if ($output === trim($testCase->expected_output)) {
+                    $repository->update($this->submission, [
+                        'tests_passed' => $this->submission->tests_passed + 1,
+                        'output' => $this->submission->output ? $this->submission->output . PHP_EOL . $output : $output,
+                    ]);
+                } else {
+                    $allPassed = false;
+                    $repository->update($this->submission, [
+                        'output' => $this->submission->output ? $this->submission->output . PHP_EOL . $output : $output,
+                    ]);
+                }
+            }
+
+            $repository->update($this->submission, [
+                'passed' => $allPassed,
+                'status' => ExecutionStatus::SUCCESS,
             ]);
-            $testProcess->setInput($testCase->input . PHP_EOL);
-            $testProcess->run();
-
-            if (!$testProcess->isSuccessful()) {
-                $repository->update($this->submission, [
-                    'output' => $testProcess->getErrorOutput(),
-                    'passed' => false,
-                    'status' => ExecutionStatus::FAILED,
-                ]);
-                $removeProcess = new Process([
-                    'docker', 'rm', '-f', $containerName,
-                ]);
-                $removeProcess->run();
-                return;
-            }
-
-            $output = trim($testProcess->getOutput());
-            if ($output === trim($testCase->expected_output)) {
-                $repository->update($this->submission, [
-                    'tests_passed' => $this->submission->tests_passed + 1,
-                    'output' => $this->submission->output ? $this->submission->output . PHP_EOL . $output : $output,
-                ]);
-            } else {
-                $allPassed = false;
-                $repository->update($this->submission, [
-                    'output' => $this->submission->output ? $this->submission->output . PHP_EOL . $output : $output,
-                ]);
-            }
-
+        } catch (\Exception $e) {
+            $repository->update($this->submission, [
+                'output' => $e->getMessage(),
+                'passed' => false,
+                'status' => ExecutionStatus::FAILED,
+            ]);
+        } finally {
+            $executor->removeContainer($containerName);
         }
-
-        $removeProcess = new Process([
-            'docker', 'rm', '-f', $containerName,
-        ]);
-        $removeProcess->run();
-
-        if (!$removeProcess->isSuccessful()) {
-            throw new \Exception('Failed to remove Docker container: ' . $removeProcess->getErrorOutput());
-        }
-
-        $repository->update($this->submission, [
-            'passed' => $allPassed,
-            'status' => ExecutionStatus::SUCCESS,
-        ]);
     }
 }

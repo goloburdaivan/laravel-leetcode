@@ -166,7 +166,7 @@ export default function LabPage({ lab }) {
                             <Editor
                                 width="100%"
                                 height="400px"
-                                language="python"
+                                language={lab.language}
                                 theme="vs-dark"
                                 value={code}
                                 onChange={handleCodeChange}

@@ -4,7 +4,7 @@ import { useForm } from '@inertiajs/react';
 import LabForm from './Components/LabForm.jsx';
 import Navigation from "@/Pages/Components/Navigation.jsx";
 
-const CreateLab = ({ course }) => {
+const CreateLab = ({ course, lists }) => {
     const { setData, post, data } = useForm({
         title: '',
         description: '',
@@ -34,6 +34,7 @@ const CreateLab = ({ course }) => {
                             onFieldChange={handleFieldChange}
                             initialValues={data}
                             handleSubmit={handleSubmit}
+                            languages={lists.language}
                             title="Create New Programming Lab"
                         />
                     </Paper>

@@ -13,7 +13,10 @@ const EditLab = ({ lab, lists }) => {
         title: lab.title,
         description: lab.description || '',
         starter_code: lab.starter_code,
-        due_date: lab.due_date ? new Date(lab.due_date).toISOString().split('T')[0] : '',
+        due_date: lab.due_date
+            ? new Date(lab.due_date).toISOString().split('T')[0]
+            : '',
+        language: lab.language || '',
     });
 
     const [tabIndex, setTabIndex] = useState(0);
@@ -43,7 +46,7 @@ const EditLab = ({ lab, lists }) => {
             const response = await axios.get(`/teacher/labs/${lab.id}/submissions?page=1`);
             setSubmissions(response.data.submissions);
         } catch (error) {
-            console.error("Error fetching submissions:", error);
+            console.error('Error fetching submissions:', error);
         } finally {
             setLoading(false);
         }
@@ -66,7 +69,9 @@ const EditLab = ({ lab, lists }) => {
                                 description: data.description,
                                 starter_code: data.starter_code,
                                 due_date: data.due_date,
+                                language: data.language, // Передаем выбранный язык
                             }}
+                            languages={lists.language} // Передаем список языков
                             title="Edit Programming Lab"
                         />
 
@@ -80,7 +85,7 @@ const EditLab = ({ lab, lists }) => {
                             >
                                 <Tab label="Test Cases" />
                                 <Tab label="Submissions" />
-                                <Tab label="Tips" /> {/* New Tab for Tips */}
+                                <Tab label="Tips" />
                             </Tabs>
 
                             {tabIndex === 0 && (

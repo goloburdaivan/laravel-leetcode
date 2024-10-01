@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Teacher\Course;
 
 use App\Enums\ExecutionStatus;
+use App\Enums\Languages;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateTestCaseRequest;
 use App\Http\Requests\EditLabRequest;
@@ -39,6 +40,7 @@ class CourseLabsController extends Controller
         return Inertia::render('Teacher/Lab/Show', [
             'lab' => $lab,
             'lists' => [
+                'language' => Languages::getLists(),
                 'execution_status' => ExecutionStatus::getLists(),
             ],
         ]);
@@ -61,6 +63,9 @@ class CourseLabsController extends Controller
     {
         return Inertia::render('Teacher/Lab/Create', [
             'course' => $course,
+            'lists' => [
+                'language' => Languages::getLists(),
+            ]
         ]);
     }
 

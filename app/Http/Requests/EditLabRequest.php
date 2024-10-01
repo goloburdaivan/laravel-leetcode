@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Languages;
+use Illuminate\Validation\Rules\Enum;
+
 class EditLabRequest extends FormRequest
 {
     /**
@@ -21,6 +24,7 @@ class EditLabRequest extends FormRequest
     {
         return [
             'title' => ['string', 'required'],
+            'language' => [new Enum(Languages::class), 'required'],
             'starter_code' => ['string', 'required'],
             'description' => ['string', 'required'],
             'due_date' => ['date', 'nullable'],

@@ -192,7 +192,7 @@ const Submissions = ({ lab, fetchedSubmissions, statuses }) => {
 
             <Pagination
                 count={totalPages}
-                page={currentPage}  // Updated to use currentPage
+                page={currentPage}
                 onChange={handlePageChange}
                 variant="outlined"
                 shape="rounded"

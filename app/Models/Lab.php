@@ -19,6 +19,7 @@ class Lab extends Model
         'due_date',
         'creator_id',
         'course_id',
+        'language',
     ];
 
     protected $casts = [
