@@ -44,11 +44,16 @@ class LabRepository
 
     public function getDeadlineLabsForUser(User $user): Collection
     {
-        return Lab::query()->whereHas('course', function ($query) use ($user) {
-            $query->whereHas('users', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            });
-        })
+        return Lab::query()
+            ->whereHas('course', function ($query) use ($user) {
+                $query->whereHas('users', function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                });
+            })
+            ->whereDoesntHave('submissions', function ($query) use ($user) {
+                $query->where('user_id', $user->id)
+                    ->where('passed', true);
+            })
             ->where('due_date', '>=', now())
             ->where('due_date', '<=', now()->addDay())
             ->get();
