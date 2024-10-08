@@ -184,7 +184,10 @@ export default function LabPage({ lab }) {
                         <CardContent>
                             <Typography variant="h6" gutterBottom>Тестові кейси</Typography>
                             <Divider sx={{ mb: 2 }} />
-                            <Box>
+                            <Box sx={{
+                                maxHeight: '400px',
+                                overflowY: 'auto',
+                            }}>
                                 {lab.test_cases.slice(0, 2).map((testCase, index) => (
                                     <Box key={index} sx={{ mb: 2 }}>
                                         <Typography variant="body2" color="text.secondary">
