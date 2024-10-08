@@ -9,6 +9,8 @@ class LanguageExecutorFactory
         return match (strtolower($language)) {
             'python' => new PythonExecutor(),
             'cpp' => new CppExecutor(),
+            'c' => new CExecutor(),
+            'php' => new PHPExecutor(),
             default => throw new \Exception("Unsupported language: $language"),
         };
     }

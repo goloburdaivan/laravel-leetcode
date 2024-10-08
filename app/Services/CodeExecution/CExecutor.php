@@ -7,7 +7,7 @@ use App\Services\CodeExecution\Traits\HasCompilation;
 use App\Services\CodeExecution\Traits\HasFileCreation;
 use Symfony\Component\Process\Process;
 
-class CppExecutor implements LanguageExecutor
+class CExecutor implements LanguageExecutor
 {
     use HasFileCreation;
     use HasCompilation;
@@ -30,8 +30,14 @@ class CppExecutor implements LanguageExecutor
      */
     public function executeCode(string $containerName, string $sourceCode, ?string $input = null): ExecutionResult
     {
-        $tempFile = $this->createFile('main.cpp', $sourceCode, $containerName);
-        $result = $this->compile('main.cpp', 'a.out', 'g++', $containerName, $input);
+        $tempFile = $this->createFile('main.c', $sourceCode, $containerName);
+        $result = $this->compile(
+            'main.c',
+            'a.out',
+            'gcc',
+            $containerName,
+            $input,
+        );
 
         unlink($tempFile);
         return $result;

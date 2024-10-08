@@ -3,10 +3,13 @@
 namespace App\Services\CodeExecution;
 
 use App\DTO\ExecutionResult;
+use App\Services\CodeExecution\Traits\HasInterpreter;
 use Symfony\Component\Process\Process;
 
 class PythonExecutor implements LanguageExecutor
 {
+    use HasInterpreter;
+
     /**
      * @throws \Exception
      */
@@ -25,18 +28,13 @@ class PythonExecutor implements LanguageExecutor
 
     public function executeCode(string $containerName, string $sourceCode, ?string $input = null): ExecutionResult
     {
-        $testProcess = new Process([
-            'docker', 'exec', '-i', $containerName, 'python', '-c', $sourceCode,
-        ]);
-        $testProcess->setInput($input . PHP_EOL);
-        $testProcess->run();
-
-        $result = new ExecutionResult();
-        $result->setOutput($testProcess->getOutput());
-        $result->setErrorOutput($testProcess->getErrorOutput());
-        $result->setSuccessful($testProcess->isSuccessful());
-
-        return $result;
+        return $this->interpret(
+            'python',
+            '-c',
+            $sourceCode,
+            $containerName,
+            $input
+        );
     }
 
     public function removeContainer(string $containerName): void

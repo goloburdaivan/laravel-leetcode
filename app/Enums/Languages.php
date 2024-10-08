@@ -15,6 +15,8 @@ enum Languages: string
         return [
             self::PYTHON->value => 'Python',
             self::CPP->value => 'C++',
+            self::C->value => 'C',
+            self::PHP->value => 'PHP',
         ];
     }
 }

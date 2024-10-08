@@ -3,19 +3,17 @@
 namespace App\Services\CodeExecution;
 
 use App\DTO\ExecutionResult;
-use App\Services\CodeExecution\Traits\HasCompilation;
-use App\Services\CodeExecution\Traits\HasFileCreation;
+use App\Services\CodeExecution\Traits\HasInterpreter;
 use Symfony\Component\Process\Process;
 
-class CppExecutor implements LanguageExecutor
+class PHPExecutor implements LanguageExecutor
 {
-    use HasFileCreation;
-    use HasCompilation;
+    use HasInterpreter;
 
     public function startContainer(string $containerName): void
     {
         $runProcess = new Process([
-            'docker', 'run', '-d', '--name', $containerName, 'gcc:latest',
+            'docker', 'run', '-d', '--name', $containerName, 'php:latest',
             'sleep', 'infinity',
         ]);
         $runProcess->run();
@@ -25,16 +23,17 @@ class CppExecutor implements LanguageExecutor
         }
     }
 
-    /**
-     * @throws \Exception
-     */
     public function executeCode(string $containerName, string $sourceCode, ?string $input = null): ExecutionResult
     {
-        $tempFile = $this->createFile('main.cpp', $sourceCode, $containerName);
-        $result = $this->compile('main.cpp', 'a.out', 'g++', $containerName, $input);
+        $sourceCode = str_replace(['<?php', '?>', '?php>'], '', $sourceCode);
 
-        unlink($tempFile);
-        return $result;
+        return $this->interpret(
+            'php',
+            '-r',
+            $sourceCode,
+            $containerName,
+            $input,
+        );
     }
 
     public function removeContainer(string $containerName): void
