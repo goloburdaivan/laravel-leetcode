@@ -3,6 +3,7 @@
 namespace App\Services\CodeExecution\Traits;
 
 use App\DTO\ExecutionResult;
+use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Symfony\Component\Process\Process;
 
 trait HasInterpreter
@@ -18,12 +19,20 @@ trait HasInterpreter
             'docker', 'exec', '-i', $container, $interpreter, $flag, $sourceCode,
         ]);
         $interpreterProcess->setInput($input . PHP_EOL);
-        $interpreterProcess->run();
+        $interpreterProcess->setTimeout(5);
 
         $result = new ExecutionResult();
-        $result->setOutput($interpreterProcess->getOutput());
-        $result->setErrorOutput($interpreterProcess->getErrorOutput());
-        $result->setSuccessful($interpreterProcess->isSuccessful());
+
+        try {
+            $interpreterProcess->run();
+            $result->setOutput($interpreterProcess->getOutput());
+            $result->setErrorOutput($interpreterProcess->getErrorOutput());
+            $result->setSuccessful($interpreterProcess->isSuccessful());
+        } catch (ProcessTimedOutException $exception) {
+            $result->setOutput("Time limit exceeded");
+            $result->setErrorOutput($exception->getMessage());
+            $result->setSuccessful(false);
+        }
 
         return $result;
     }
