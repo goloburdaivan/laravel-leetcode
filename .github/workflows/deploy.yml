@@ -22,7 +22,7 @@ jobs:
           key: ${{ secrets.GCP_VM_SSH_KEY }}
           port: 22
           script: |
-            cd /home/garbageinfocollector/course-work
+            cd course-work
             git pull origin main
             docker-compose down
             docker-compose up -d
