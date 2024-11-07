@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTO\PaginationDTO;
 use App\Http\Requests\CreateLabTipRequest;
 use App\Http\Requests\CreateTestCaseRequest;
 use App\Http\Requests\EditLabRequest;
@@ -84,5 +85,18 @@ class LabService
             ->query()
             ->whereLab($lab->id)
             ->get();
+    }
+
+    public function removeTestCase(int $testCaseId): bool
+    {
+        return $this->testCaseRepository->delete($testCaseId);
+    }
+
+    public function getFilteredLabs(Course $course, array $filters = []): PaginationDTO
+    {
+        return $this->labRepository->query()
+            ->byCourse($course->id)
+            ->filter($filters)
+            ->paginate();
     }
 }

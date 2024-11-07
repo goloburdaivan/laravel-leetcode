@@ -82,4 +82,13 @@ class CourseLabsController extends Controller
         ]);
     }
 
+    public function removeTestCase(Course $course, Lab $lab, int $id): RedirectResponse
+    {
+        $this->labService->removeTestCase($id);
+
+        return redirect()->route('teacher.course-labs.show', [
+            'course' => $course->id,
+            'lab' => $lab->id,
+        ]);
+    }
 }

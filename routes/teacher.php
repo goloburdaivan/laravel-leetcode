@@ -67,6 +67,10 @@ Route::controller(CourseLabsController::class)->group(function() {
     Route::post('/courses/{course}/labs/{lab}/test-cases', 'addTestCase')
         ->name('teacher.course-labs.add-test-case')
         ->middleware('auth:teacher');
+
+    Route::delete('/courses/{course}/labs/{lab}/test-cases/{id}', 'removeTestCase')
+        ->name('teacher.course-labs.remove-test-case')
+        ->middleware('auth:teacher');
 });
 
 Route::controller(LabSubmissionsController::class)->group(function() {

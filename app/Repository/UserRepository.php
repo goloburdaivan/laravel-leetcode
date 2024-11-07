@@ -7,30 +7,8 @@ use App\Repository\QueryBuilders\UserQueryBuilder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
-class UserRepository
+class UserRepository extends AbstractRepository
 {
-    /**
-     * @throws \Exception
-     */
-    public function create(array $data): User
-    {
-        $user = new User();
-        return $this->update($user, $data);
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function update(User $user, array $data): User
-    {
-        $user->fill($data);
-        if (!$user->save()) {
-            throw new \Exception("Failed to update user!");
-        }
-
-        return $user;
-    }
-
     public function query(): UserQueryBuilder
     {
         return new UserQueryBuilder();
@@ -52,4 +30,8 @@ class UserRepository
             ->get();
     }
 
+    public function model(): string
+    {
+        return User::class;
+    }
 }

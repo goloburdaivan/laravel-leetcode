@@ -7,25 +7,8 @@ use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 
-class CourseRepository
+class CourseRepository extends AbstractRepository
 {
-    public function create(Teacher $teacher, array $data): Course
-    {
-        $course = new Course();
-        return $this->update($course, $data + [
-                'teacher_id' => $teacher->id,
-            ]);
-    }
-
-    public function update(Course $course, array $data): Course
-    {
-        $course->fill($data);
-        if (!$course->save()) {
-            throw new \Exception("Failed to update course");
-        }
-
-        return $course;
-    }
 
     public function getUserCourses(User $user): Collection
     {
@@ -54,5 +37,10 @@ class CourseRepository
             }])
             ->withCount('labs')
             ->first();
+    }
+
+    public function model(): string
+    {
+        return Course::class;
     }
 }

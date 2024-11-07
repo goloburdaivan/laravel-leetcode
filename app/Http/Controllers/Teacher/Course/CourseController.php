@@ -11,6 +11,8 @@ use App\Models\Course;
 use App\Repository\CourseRepository;
 use App\Repository\LabRepository;
 use App\Services\CourseInvitationService;
+use App\Services\CourseService;
+use App\Services\LabService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
@@ -20,26 +22,22 @@ use Inertia\Response;
 class CourseController extends Controller
 {
     public function __construct(
-        private readonly CourseRepository $repository,
-        private readonly LabRepository $labRepository,
+        private readonly CourseService $service,
+        private readonly LabService $labService,
         private readonly CourseInvitationService $invitationService,
     ) {
     }
 
     public function create(CreateCourseRequest $request): RedirectResponse
     {
-        $data = $request->validated();
-        $this->repository->create($request->user(), $data);
+        $this->service->create($request->user(), $request);
 
         return Redirect::route('teacher.index', status: 303);
     }
 
     public function show(Course $course, LabFilterRequest $request): Response
     {
-        $labs = $this->labRepository->query()
-            ->byCourse($course->id)
-            ->filter($request->query())
-            ->paginate();
+        $labs = $this->labService->getFilteredLabs($course, $request->query());
 
         return Inertia::render('Teacher/Course/Index', [
             'course' => $course,

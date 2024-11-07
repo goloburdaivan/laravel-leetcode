@@ -18,12 +18,13 @@ import {Delete} from '@mui/icons-material';
 import {useForm} from '@inertiajs/react';
 
 const TestCasesComponent = ({lab}) => {
-    const {data, setData, post, reset} = useForm({
+    const {data, setData, post, delete: destroy, reset} = useForm({
         input: '',
         expected_output: ''
     });
 
     const [loading, setLoading] = useState(false);
+    const [deletingId, setDeletingId] = useState(null);
 
     const addTestCase = (e) => {
         e.preventDefault();
@@ -37,6 +38,19 @@ const TestCasesComponent = ({lab}) => {
             },
             onError: () => {
                 setLoading(false);
+            }
+        });
+    };
+
+    const deleteTestCase = (id) => {
+        setDeletingId(id);
+        destroy(`/teacher/courses/${lab.course_id}/labs/${lab.id}/test-cases/${id}`, {
+            preserveScroll: true,
+            onSuccess: () => {
+                setDeletingId(null);
+            },
+            onError: () => {
+                setDeletingId(null);
             }
         });
     };
@@ -101,7 +115,7 @@ const TestCasesComponent = ({lab}) => {
                                                 testCase.input.split('\n').map((str, idx) => (
                                                     <span key={idx}>{str}<br/></span>
                                                 ))
-                                            : testCase.input
+                                                : testCase.input
                                         }
                                     </Box>
                                 </TableCell>
@@ -121,7 +135,11 @@ const TestCasesComponent = ({lab}) => {
                                     </Box>
                                 </TableCell>
                                 <TableCell align="right">
-                                    <IconButton color="secondary">
+                                    <IconButton
+                                        color="secondary"
+                                        onClick={() => deleteTestCase(testCase.id)}
+                                        disabled={deletingId === testCase.id} // Disable button if deleting this test case
+                                    >
                                         <Delete/>
                                     </IconButton>
                                 </TableCell>

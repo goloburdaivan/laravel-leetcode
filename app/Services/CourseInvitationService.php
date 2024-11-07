@@ -9,14 +9,14 @@ use App\Models\Course;
 use App\Repository\InvitationLogRepository;
 use App\Repository\UserRepository;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class CourseInvitationService
 {
     public function __construct(
         private readonly UserRepository          $userRepository,
         private readonly InvitationLogRepository $invitationLogRepository,
-    )
-    {
+    ) {
     }
 
     public function invite(Course $course, InviteUserRequest $request): void
@@ -51,6 +51,7 @@ class CourseInvitationService
         $log = $this->invitationLogRepository->create([
             'user_id' => $user->id,
             'course_id' => $course->id,
+            'token' => Str::random(32),
             'expires_at' => now()->addDay(),
         ]);
 

@@ -8,30 +8,8 @@ use App\Models\User;
 use App\Repository\QueryBuilders\LabQueryBuilder;
 use Illuminate\Database\Eloquent\Collection;
 
-class LabRepository
+class LabRepository extends AbstractRepository
 {
-    /**
-     * @throws \Exception
-     */
-    public function create(array $data): Lab
-    {
-        $lab = new Lab();
-        return $this->update($lab, $data);
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function update(Lab $lab, array $data): Lab
-    {
-        $lab->fill($data);
-        if (!$lab->save()) {
-            throw new \Exception("Failed to update lab");
-        }
-
-        return $lab;
-    }
-
     public function getAllByCourse(Course $course): Collection
     {
         return Lab::query()->where('course_id', $course->id)->get();
@@ -62,5 +40,10 @@ class LabRepository
     public function query(): LabQueryBuilder
     {
         return new LabQueryBuilder();
+    }
+
+    public function model(): string
+    {
+        return Lab::class;
     }
 }
