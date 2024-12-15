@@ -17,6 +17,8 @@ const EditLab = ({ lab, lists }) => {
             ? new Date(lab.due_date).toISOString().split('T')[0]
             : '',
         language: lab.language || '',
+        execution_time: lab.execution_time || '',
+        memory_limit: lab.memory_limit || '',
     });
 
     const [tabIndex, setTabIndex] = useState(0);
@@ -69,9 +71,11 @@ const EditLab = ({ lab, lists }) => {
                                 description: data.description,
                                 starter_code: data.starter_code,
                                 due_date: data.due_date,
-                                language: data.language, // Передаем выбранный язык
+                                language: data.language,
+                                execution_time: data.execution_time,
+                                memory_limit: data.memory_limit,
                             }}
-                            languages={lists.language} // Передаем список языков
+                            languages={lists.language}
                             title="Edit Programming Lab"
                         />
 

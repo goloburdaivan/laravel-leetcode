@@ -20,6 +20,8 @@ class Lab extends Model
         'creator_id',
         'course_id',
         'language',
+        'execution_time',
+        'memory_limit',
     ];
 
     protected $casts = [

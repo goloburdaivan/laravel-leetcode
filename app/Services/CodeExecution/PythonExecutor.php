@@ -13,10 +13,12 @@ class PythonExecutor implements LanguageExecutor
     /**
      * @throws \Exception
      */
-    public function startContainer(string $containerName): void
+    public function startContainer(string $containerName, float $memoryLimit): void
     {
         $runProcess = new Process([
-            'docker', 'run', '-d', '--name', $containerName, 'python:3.9',
+            'docker', 'run', '-d',
+            '--memory', "{$memoryLimit}m",
+            '--name', $containerName, 'python:3.9',
             'sleep', 'infinity',
         ]);
         $runProcess->run();
@@ -26,13 +28,18 @@ class PythonExecutor implements LanguageExecutor
         }
     }
 
-    public function executeCode(string $containerName, string $sourceCode, ?string $input = null): ExecutionResult
-    {
+    public function executeCode(
+        string $containerName,
+        string $sourceCode,
+        float $executionTime,
+        ?string $input = null
+    ): ExecutionResult {
         return $this->interpret(
             'python',
             '-c',
             $sourceCode,
             $containerName,
+            $executionTime,
             $input
         );
     }

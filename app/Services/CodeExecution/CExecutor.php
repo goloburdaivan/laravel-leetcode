@@ -12,10 +12,13 @@ class CExecutor implements LanguageExecutor
     use HasFileCreation;
     use HasCompilation;
 
-    public function startContainer(string $containerName): void
+    public function startContainer(string $containerName, float $memoryLimit): void
     {
         $runProcess = new Process([
-            'docker', 'run', '-d', '--name', $containerName, 'gcc:latest',
+            'docker', 'run', '-d',
+            '--memory', "{$memoryLimit}m",
+            '--name', $containerName,
+            'gcc:latest',
             'sleep', 'infinity',
         ]);
         $runProcess->run();
@@ -28,14 +31,19 @@ class CExecutor implements LanguageExecutor
     /**
      * @throws \Exception
      */
-    public function executeCode(string $containerName, string $sourceCode, ?string $input = null): ExecutionResult
-    {
+    public function executeCode(
+        string $containerName,
+        string $sourceCode,
+        float $executionTime,
+        ?string $input = null
+    ): ExecutionResult {
         $tempFile = $this->createFile('main.c', $sourceCode, $containerName);
         $result = $this->compile(
             'main.c',
             'a.out',
             'gcc',
             $containerName,
+            $executionTime,
             $input,
         );
 

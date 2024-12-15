@@ -13,13 +13,14 @@ trait HasInterpreter
         string $flag,
         string $sourceCode,
         string $container,
+        float $executionTime,
         ?string $input = null,
     ): ExecutionResult {
         $interpreterProcess = new Process([
             'docker', 'exec', '-i', $container, $interpreter, $flag, $sourceCode,
         ]);
         $interpreterProcess->setInput($input . PHP_EOL);
-        $interpreterProcess->setTimeout(5);
+        $interpreterProcess->setTimeout($executionTime);
 
         $result = new ExecutionResult();
 

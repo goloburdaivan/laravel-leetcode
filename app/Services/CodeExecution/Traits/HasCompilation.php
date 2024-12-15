@@ -13,6 +13,7 @@ trait HasCompilation
         string $executableName,
         string $compiler,
         string $container,
+        float $executionTime,
         ?string $input = null,
     ): ExecutionResult {
         $result = new ExecutionResult();
@@ -33,14 +34,21 @@ trait HasCompilation
             'docker', 'exec', '-i', $container, "/tmp/$executableName",
         ]);
         $runProcess->setInput($input . PHP_EOL);
-        $runProcess->setTimeout(5);
+        $runProcess->setTimeout($executionTime);
 
         try {
             $runProcess->run();
-            $result->setOutput($runProcess->getOutput());
-            $result->setErrorOutput($runProcess->getErrorOutput());
-            $result->setSuccessful($runProcess->isSuccessful());
-        } catch (ProcessTimedOutException $exception) {
+
+            if ($runProcess->isSuccessful()) {
+                $result->setOutput($runProcess->getOutput());
+                $result->setErrorOutput($runProcess->getErrorOutput());
+                $result->setSuccessful(true);
+            } else {
+                $result->setOutput('');
+                $result->setErrorOutput($runProcess->getErrorOutput());
+                $result->setSuccessful(false);
+            }
+        } catch (\Exception $exception) {
             $result->setOutput("Time limit exceeded");
             $result->setErrorOutput($exception->getMessage());
             $result->setSuccessful(false);

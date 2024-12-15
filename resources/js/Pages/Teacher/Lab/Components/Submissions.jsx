@@ -178,7 +178,7 @@ const Submissions = ({ lab, fetchedSubmissions, statuses }) => {
                                         variant="outlined"
                                     />
                                 </TableCell>
-                                <TableCell>{new Date(submission.created_at).toLocaleString()}</TableCell>
+                                <TableCell>{submission.created_at}</TableCell>
                                 <TableCell>
                                     <Button variant="outlined" onClick={() => handleOpen(submission)}>
                                         View Details

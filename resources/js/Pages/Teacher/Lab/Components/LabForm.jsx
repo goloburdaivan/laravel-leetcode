@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
     Box,
     TextField,
@@ -13,7 +13,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 const LabForm = ({onFieldChange, initialValues, handleSubmit, languages}) => {
-    const {description, starter_code, due_date, title, language} = initialValues;
+    const {description, starter_code, due_date, title, language, execution_time, memory_limit} = initialValues;
 
     return (
         <Box component="form" onSubmit={handleSubmit}>
@@ -74,7 +74,10 @@ const LabForm = ({onFieldChange, initialValues, handleSubmit, languages}) => {
                     />
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={4}>
+                    <Typography variant="h6" gutterBottom>
+                        Due Date
+                    </Typography>
                     <FormControl fullWidth>
                         <TextField
                             type="date"
@@ -95,8 +98,34 @@ const LabForm = ({onFieldChange, initialValues, handleSubmit, languages}) => {
                     </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={4}>
+                    <Typography variant="h6" gutterBottom>
+                        Time Limit (s)
+                    </Typography>
+                    <TextField
+                        label="Time Limit"
+                        variant="outlined"
+                        fullWidth
+                        type="number"
+                        value={execution_time}
+                        onChange={(e) => onFieldChange('execution_time', e.target.value)}
+                        inputProps={{min: 0}}
+                    />
+                </Grid>
 
+                <Grid item xs={12} md={4}>
+                    <Typography variant="h6" gutterBottom>
+                        Memory Limit (MB)
+                    </Typography>
+                    <TextField
+                        label="Memory Limit"
+                        variant="outlined"
+                        fullWidth
+                        type="number"
+                        value={memory_limit}
+                        onChange={(e) => onFieldChange('memory_limit', e.target.value)}
+                        inputProps={{min: 0}}
+                    />
                 </Grid>
 
                 <Grid item xs={12}>

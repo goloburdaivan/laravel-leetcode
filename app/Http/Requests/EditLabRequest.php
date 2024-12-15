@@ -28,6 +28,8 @@ class EditLabRequest extends FormRequest
             'starter_code' => ['string', 'required'],
             'description' => ['string', 'required'],
             'due_date' => ['date', 'nullable'],
+            'execution_time' => ['numeric', 'nullable'],
+            'memory_limit' => ['numeric', 'nullable'],
         ];
     }
 }

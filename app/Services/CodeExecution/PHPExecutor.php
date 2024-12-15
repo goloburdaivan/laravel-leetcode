@@ -10,10 +10,12 @@ class PHPExecutor implements LanguageExecutor
 {
     use HasInterpreter;
 
-    public function startContainer(string $containerName): void
+    public function startContainer(string $containerName, float $memoryLimit): void
     {
         $runProcess = new Process([
-            'docker', 'run', '-d', '--name', $containerName, 'php:latest',
+            'docker', 'run', '-d',
+            '--memory', "{$memoryLimit}m",
+            '--name', $containerName, 'php:latest',
             'sleep', 'infinity',
         ]);
         $runProcess->run();
@@ -23,8 +25,12 @@ class PHPExecutor implements LanguageExecutor
         }
     }
 
-    public function executeCode(string $containerName, string $sourceCode, ?string $input = null): ExecutionResult
-    {
+    public function executeCode(
+        string $containerName,
+        string $sourceCode,
+        float $executionTime,
+        ?string $input = null
+    ): ExecutionResult {
         $sourceCode = str_replace(['<?php', '?>', '?php>'], '', $sourceCode);
 
         return $this->interpret(
@@ -32,6 +38,7 @@ class PHPExecutor implements LanguageExecutor
             '-r',
             $sourceCode,
             $containerName,
+            $executionTime,
             $input,
         );
     }

@@ -36,7 +36,7 @@ class ExecuteCodeJob implements ShouldQueue
         $containerName = 'submission' . $this->submission->id;
 
         try {
-            $executor->startContainer($containerName);
+            $executor->startContainer($containerName, $this->submission->lab->memory_limit);
             $testCases = $testCaseRepository->getTestCases($this->submission->lab);
             $allPassed = true;
 
@@ -44,6 +44,7 @@ class ExecuteCodeJob implements ShouldQueue
                 $result = $executor->executeCode(
                     $containerName,
                     $this->submission->source_code,
+                    $this->submission->lab->execution_time,
                     $testCase->input
                 );
 

@@ -12,10 +12,12 @@ class CppExecutor implements LanguageExecutor
     use HasFileCreation;
     use HasCompilation;
 
-    public function startContainer(string $containerName): void
+    public function startContainer(string $containerName, float $memoryLimit): void
     {
         $runProcess = new Process([
-            'docker', 'run', '-d', '--name', $containerName, 'gcc:latest',
+            'docker', 'run', '-d',
+            '--memory', "{$memoryLimit}m",
+            '--name', $containerName, 'gcc:latest',
             'sleep', 'infinity',
         ]);
         $runProcess->run();
@@ -28,10 +30,21 @@ class CppExecutor implements LanguageExecutor
     /**
      * @throws \Exception
      */
-    public function executeCode(string $containerName, string $sourceCode, ?string $input = null): ExecutionResult
-    {
+    public function executeCode(
+        string $containerName,
+        string $sourceCode,
+        float $executionTime,
+        ?string $input = null
+    ): ExecutionResult {
         $tempFile = $this->createFile('main.cpp', $sourceCode, $containerName);
-        $result = $this->compile('main.cpp', 'a.out', 'g++', $containerName, $input);
+        $result = $this->compile(
+            'main.cpp',
+            'a.out',
+            'g++',
+            $containerName,
+            $executionTime,
+            $input
+        );
 
         unlink($tempFile);
         return $result;
