@@ -26,9 +26,16 @@ trait HasInterpreter
 
         try {
             $interpreterProcess->run();
-            $result->setOutput($interpreterProcess->getOutput());
-            $result->setErrorOutput($interpreterProcess->getErrorOutput());
-            $result->setSuccessful($interpreterProcess->isSuccessful());
+
+            if ($interpreterProcess->isSuccessful()) {
+                $result->setOutput($interpreterProcess->getOutput());
+                $result->setErrorOutput($interpreterProcess->getErrorOutput());
+                $result->setSuccessful(true);
+            } else {
+                $result->setOutput('Memory limit exceeded');
+                $result->setErrorOutput($interpreterProcess->getErrorOutput());
+                $result->setSuccessful(false);
+            }
         } catch (ProcessTimedOutException $exception) {
             $result->setOutput("Time limit exceeded");
             $result->setErrorOutput($exception->getMessage());

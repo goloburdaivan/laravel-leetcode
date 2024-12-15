@@ -44,7 +44,7 @@ trait HasCompilation
                 $result->setErrorOutput($runProcess->getErrorOutput());
                 $result->setSuccessful(true);
             } else {
-                $result->setOutput('');
+                $result->setOutput('Memory limit exceeded');
                 $result->setErrorOutput($runProcess->getErrorOutput());
                 $result->setSuccessful(false);
             }
