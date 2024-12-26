@@ -80,7 +80,7 @@ export default function StudentDashboard({
                             <CourseCard key={index} course={course}/>
                         ))}
 
-                        <Typography variant="h5" gutterBottom style={{marginTop: 20}}>Топ студентов</Typography>
+                        <Typography variant="h5" gutterBottom style={{marginTop: 20}}>Топ студентів</Typography>
                         <Paper>
                             <Table>
                                 <TableHead>

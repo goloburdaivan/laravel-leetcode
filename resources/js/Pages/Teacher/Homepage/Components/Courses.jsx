@@ -75,7 +75,6 @@ export default function Courses({ courses }) {
                                 >
                                     View Course
                                 </Button>
-                                <Button size="small" color="secondary">Edit</Button>
                                 <Button size="small" color="success" onClick={() => handleOpenModal(course)}>
                                     Invite User
                                 </Button>
