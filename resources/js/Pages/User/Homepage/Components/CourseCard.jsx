@@ -18,7 +18,7 @@ const CourseCard = ({ course }) => (
                         value={((course.labs_with_passed_submissions_count / course.labs_count) * 100).toFixed(1)}
                         style={{ marginTop: 8, marginBottom: 8 }}
                     />
-                    <Typography variant="body2" color="textSecondary">Прогрес %: {(course.labs_with_passed_submissions_count / course.labs_count) * 100}%</Typography>
+                    <Typography variant="body2" color="textSecondary">Прогрес %: {((course.labs_with_passed_submissions_count / course.labs_count) * 100).toFixed(1)}%</Typography>
                 </Grid>
                 <Grid item>
                     <Button href={`/courses/${course.id}`} variant="outlined" size="small" color="primary">
